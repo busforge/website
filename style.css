@@ -1,0 +1,121 @@
+/* Fonts are self-hosted (SIL OFL, see /fonts): no request leaves for a third party. */
+@font-face {
+  font-family: "Archivo";
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/archivo-800-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-500-latin.woff2") format("woff2");
+}
+:root {
+  --bg: #090e12;
+  --fg: #e5e8eb;
+  --muted: #8d9399;
+  --border: #282f35;
+  --primary: #f3a44a;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.75rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+.mark {
+  width: 112px;
+  height: 112px;
+  filter: drop-shadow(0 0 28px rgb(243 164 74 / 0.35));
+}
+h1 {
+  margin: 0;
+  font-family: "Archivo", sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.5rem, 8vw, 4.25rem);
+  letter-spacing: 0.2em;
+  /* letter-spacing trails the last glyph; pull it back so the word stays centred */
+  margin-right: -0.2em;
+}
+.tagline {
+  margin: -0.75rem 0 0;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: clamp(0.75rem, 2.4vw, 0.95rem);
+  letter-spacing: 0.18em;
+  color: var(--primary);
+  text-transform: uppercase;
+}
+.status {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+footer {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 1.5rem 1.5rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  text-align: center;
+}
+footer p { max-width: 52rem; margin: 0 auto 0.6rem; }
+footer a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--border); }
+footer a:hover { color: var(--primary); border-color: var(--primary); }
+
+/* Legal pages (Impressum, Datenschutz) */
+.legal {
+  display: block;
+  flex: 1;
+  width: 100%;
+  text-align: left;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+  line-height: 1.65;
+  font-size: 0.95rem;
+}
+.legal .home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--fg);
+  text-decoration: none;
+  font-family: "Archivo", sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  font-size: 0.85rem;
+}
+.legal .home svg { width: 28px; height: 28px; }
+.legal h1 {
+  font-size: 1.75rem;
+  letter-spacing: 0.02em;
+  margin: 2.25rem 0 1.5rem;
+}
+.legal h2 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 2rem 0 0.5rem;
+}
+.legal p { margin: 0 0 0.75rem; color: var(--fg); }
+.legal p a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--border); }
+.legal p a:hover { color: var(--primary); border-color: var(--primary); }
+.legal .muted { color: var(--muted); }

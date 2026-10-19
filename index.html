@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Busforge · Open commissioning tool for KNX</title>
-  <meta name="description" content="Busforge is an independent, self-hostable tool to import ETS projects, watch the KNX bus and program KNX devices. Public alpha in preparation.">
+  <meta name="description" content="Busforge is an independent, self-hostable tool to import ETS projects, watch the KNX bus and program KNX devices, with every hardware claim backed by a read-back. Public alpha.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -12,8 +12,8 @@
   <meta name="theme-color" content="#090e12">
   <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-  <main>
+<body class="home-page">
+  <header class="hero">
     <svg class="mark" viewBox="0 0 32 32" role="img" aria-label="Busforge logo">
       <defs>
         <linearGradient id="bf" x1="0" y1="0" x2="0" y2="1">
@@ -40,10 +40,77 @@
     </svg>
     <h1>BUSFORGE</h1>
     <p class="tagline">Open commissioning tool for KNX</p>
-    <p class="status">Public alpha in preparation.</p>
+    <p class="lead">Import your ETS project, watch the bus and program real KNX devices from a web UI. Self-hosted in one Docker container, no Windows needed.</p>
+    <p class="badge">Public alpha · for technically capable KNX users</p>
+    <nav class="cta">
+      <a class="button primary" href="https://github.com/busforge/busforge/blob/main/docs/install.md">Install guide</a>
+      <a class="button" href="https://github.com/busforge/busforge">Source on GitHub</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section>
+      <h2>What it does</h2>
+      <dl class="features">
+        <div><dt>Import</dt><dd>ETS 5/6 projects (<code>.knxproj</code>, password-protected ones too) and manufacturer product databases (<code>.knxprod</code>), or start with an empty project.</dd></div>
+        <div><dt>Watch</dt><dd>A live bus monitor with decoded values and group-address names, KNX Data Secure telegrams included.</dd></div>
+        <div><dt>Configure</dt><dd>The device's own parameter pages: conditions, channels, modules, translations.</dd></div>
+        <div><dt>Program</dt><dd>Parameters, group addresses and full downloads, each backed up first and read back afterwards.</dd></div>
+        <div><dt>Commission</dt><dd>Assign an individual address and bring up a factory-fresh device.</dd></div>
+        <div><dt>Keep</dt><dd>Restore points, drift detection between project and device, encrypted export.</dd></div>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Refuse, never pretend</h2>
+      <p>Programming writes bytes into a device in a real building. Busforge refuses what it cannot do with a coded error rather than guessing, and a claim about a device names what was shown on that device: our bytes on it, the same bytes as ETS writes, the device acting on them, and surviving a restart. Passing tests are not counted as proof.</p>
+      <p>Which products have been tested, operation by operation, is in the <a href="https://github.com/busforge/busforge/blob/main/docs/compatibility.md">compatibility list</a>. A product nobody has tested can still be programmed where its memory model is supported, after you confirm that it is untested.</p>
+    </section>
+
+    <section>
+      <h2>Quick start</h2>
+      <pre><code>openssl rand -hex 32 &gt; busforge-master.key   # keep this file with your backups
+docker run -d --name busforge --stop-timeout 1800 \
+  -p 127.0.0.1:3000:3000 \
+  -v busforge-data:/app/apps/server/data \
+  -e BUSFORGE_MASTER_KEY="$(cat busforge-master.key)" \
+  ghcr.io/busforge/busforge:latest</code></pre>
+      <p>Then open <code>http://127.0.0.1:3000</code>, create an empty project or import your ETS project, and add your KNXnet/IP interface. The master key seals the Data Secure keys Busforge stores; without it a restored backup cannot open them. The published image is for x86_64 hosts; on arm64, build it from the source. The <a href="https://github.com/busforge/busforge/blob/main/docs/install.md">install guide</a> covers the compose setup, product definitions, USB interfaces, the platforms Busforge has run on, and update, backup and restore.</p>
+      <p class="note">Busforge has no login. Keep it on a trusted network; never expose it to the internet.</p>
+    </section>
+
+    <section>
+      <h2>KNX Secure</h2>
+      <div class="split">
+        <div>
+          <h3>Data Secure: supported</h3>
+          <p>Read and program Data Secure devices, activate a factory device from its certificate, send and decode secured group telegrams. Shown on two products so far.</p>
+        </div>
+        <div>
+          <h3>IP Secure: not supported</h3>
+          <p>Busforge connects to an interface over a plain KNXnet/IP tunnel. An interface that accepts only secure tunnelling cannot be used.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Limits of the alpha</h2>
+      <p>No firmware download, no System 2 or System 300 devices, writes to System 1 devices only in one case, and powerline, RF and IP media never tested on the wire. All hardware work so far was on twisted pair. The full list, with the known issues and their workarounds, is on the <a href="https://github.com/busforge/busforge/blob/main/docs/limitations.md">limitations page</a>.</p>
+    </section>
+
+    <section>
+      <h2>Report a problem</h2>
+      <p>Found a fault, or a device that works for you? Open an <a href="https://github.com/busforge/busforge/issues">issue on GitHub</a>. Please do not attach project files, keys or diagnostic packages to a public issue.</p>
+    </section>
+
+    <section>
+      <h2>License</h2>
+      <p>Source-available under the <a href="https://github.com/busforge/busforge/blob/main/LICENSE">PolyForm Noncommercial License 1.0.0</a>: free for private, hobby, research and other noncommercial use. Commercial use, such as commissioning installations for paying clients, needs a separate license; write to <a href="mailto:thorben@fohlmeister.com">thorben@fohlmeister.com</a>.</p>
+    </section>
   </main>
+
   <footer>
-    <p>Busforge is an independent project. It is not affiliated with, endorsed by, sponsored by or certified by KNX Association cvba. KNX and ETS are registered trademarks of KNX Association cvba, Brussels, Belgium, used here only to name the standard and file formats Busforge interoperates with.</p>
+    <p>Busforge is an independent project. It is not affiliated with, endorsed by, sponsored by or certified by KNX Association cvba. KNX and ETS are registered trademarks of KNX Association cvba, Brussels, Belgium, used here only to name the standard and file formats Busforge interoperates with. Programming KNX devices can leave them misconfigured; use at your own risk and back up your ETS project first.</p>
     <p><a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a></p>
   </footer>
 </body>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Busforge · Open commissioning tool for KNX</title>
-  <meta name="description" content="Busforge is an independent, self-hostable tool to import ETS projects, watch the KNX bus and program KNX devices, with every hardware claim backed by a read-back. Public alpha.">
+  <meta name="description" content="Busforge is an independent, self-hostable tool to import ETS projects, watch the KNX bus and program KNX devices, with every hardware claim naming what was shown on a real device. Public alpha.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -42,10 +42,10 @@
     <p class="tagline">Open commissioning tool for KNX</p>
     <p class="lead">Import your ETS project, watch the bus and program real KNX devices from a web UI. Self-hosted in one Docker container, no Windows needed.</p>
     <p class="badge">Public alpha · for technically capable KNX users</p>
-    <nav class="cta">
+    <div class="cta">
       <a class="button primary" href="https://github.com/busforge/busforge/blob/main/docs/install.md">Install guide</a>
       <a class="button" href="https://github.com/busforge/busforge">Source on GitHub</a>
-    </nav>
+    </div>
   </header>
 
   <main class="content">
@@ -55,7 +55,7 @@
         <div><dt>Import</dt><dd>ETS 5/6 projects (<code>.knxproj</code>, password-protected ones too) and manufacturer product databases (<code>.knxprod</code>), or start with an empty project.</dd></div>
         <div><dt>Watch</dt><dd>A live bus monitor with decoded values and group-address names, KNX Data Secure telegrams included.</dd></div>
         <div><dt>Configure</dt><dd>The device's own parameter pages: conditions, channels, modules, translations.</dd></div>
-        <div><dt>Program</dt><dd>Parameters, group addresses and full downloads, each backed up first and read back afterwards.</dd></div>
+        <div><dt>Program</dt><dd>Parameters, group addresses and full downloads, each read back afterwards; surgical writes are backed up first.</dd></div>
         <div><dt>Commission</dt><dd>Assign an individual address and bring up a factory-fresh device.</dd></div>
         <div><dt>Keep</dt><dd>Restore points, drift detection between project and device, encrypted export.</dd></div>
       </dl>
@@ -63,13 +63,13 @@
 
     <section>
       <h2>Refuse, never pretend</h2>
-      <p>Programming writes bytes into a device in a real building. Busforge refuses what it cannot do with a coded error rather than guessing, and a claim about a device names what was shown on that device: our bytes on it, the same bytes as ETS writes, the device acting on them, and surviving a restart. Passing tests are not counted as proof.</p>
+      <p>Programming writes bytes into a device in a real building. Busforge refuses what it cannot do with a coded error rather than guessing, and a claim about a device names which of these was shown on that device: our bytes on it, the same bytes as ETS writes, the device acting on them, and surviving a restart. Passing tests are not counted as proof.</p>
       <p>Which products have been tested, operation by operation, is in the <a href="https://github.com/busforge/busforge/blob/main/docs/compatibility.md">compatibility list</a>. A product nobody has tested can still be programmed where its memory model is supported, after you confirm that it is untested.</p>
     </section>
 
     <section>
       <h2>Quick start</h2>
-      <pre><code>openssl rand -hex 32 &gt; busforge-master.key   # keep this file with your backups
+      <pre><code>[ -f busforge-master.key ] || openssl rand -hex 32 &gt; busforge-master.key   # keep it safe
 docker run -d --name busforge --stop-timeout 1800 \
   -p 127.0.0.1:3000:3000 \
   -v busforge-data:/app/apps/server/data \
@@ -84,7 +84,7 @@ docker run -d --name busforge --stop-timeout 1800 \
       <div class="split">
         <div>
           <h3>Data Secure: supported</h3>
-          <p>Read and program Data Secure devices, activate a factory device from its certificate, send and decode secured group telegrams. Shown on two products so far.</p>
+          <p>Read and program Data Secure devices, activate a factory device from its certificate, send and decode secured group telegrams. Shown on two products so far, plus the download of one secure IP interface.</p>
         </div>
         <div>
           <h3>IP Secure: not supported</h3>

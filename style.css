@@ -60,11 +60,6 @@ h1 {
   color: var(--primary);
   text-transform: uppercase;
 }
-.status {
-  margin: 0.5rem 0 0;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
 footer {
   border-top: 1px solid var(--border);
   padding: 1.25rem 1.5rem 1.5rem;

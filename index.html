@@ -4,108 +4,314 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Busforge · Open commissioning tool for KNX</title>
-  <meta name="description" content="Busforge is an independent, self-hostable tool to import ETS projects, watch the KNX bus and program KNX devices, with every hardware claim naming what was shown on a real device. Public alpha.">
+  <meta name="description" content="Busforge is an independent, self-hostable tool to import ETS projects, watch the KNX bus and program KNX devices, reading each one back after a write. Public alpha.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#090e12">
+  <link rel="preload" href="/fonts/archivo-var-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/style.css">
 </head>
-<body class="home-page">
-  <header class="hero">
-    <svg class="mark" viewBox="0 0 32 32" role="img" aria-label="Busforge logo">
-      <defs>
-        <linearGradient id="bf" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffc270"/>
-          <stop offset=".5" stop-color="#f3a44a"/>
-          <stop offset="1" stop-color="#e1862a"/>
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="7" fill="url(#bf)"/>
-      <g fill="none" stroke="#221202" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 22.5H28"/>
-        <path d="M9 22.5V15"/>
-        <path d="M23 22.5V15"/>
-        <path d="M16 22.5V11.5"/>
-        <rect x="6.2" y="9.4" width="5.6" height="5.6" rx="1.4"/>
-        <rect x="20.2" y="9.4" width="5.6" height="5.6" rx="1.4"/>
-        <rect x="11.8" y="4.6" width="8.4" height="6.9" rx="1.7"/>
-      </g>
-      <g fill="#221202">
-        <circle cx="9" cy="22.5" r="1.7"/>
-        <circle cx="16" cy="22.5" r="1.7"/>
-        <circle cx="23" cy="22.5" r="1.7"/>
-      </g>
-    </svg>
-    <h1>BUSFORGE</h1>
-    <p class="tagline">Open commissioning tool for KNX</p>
-    <p class="lead">Import your ETS project, watch the bus and program real KNX devices from a web UI. Self-hosted in one Docker container, no Windows needed.</p>
-    <p class="badge">Public alpha · for technically capable KNX users</p>
-    <div class="cta">
-      <a class="button primary" href="https://github.com/busforge/busforge/blob/main/docs/install.md">Install guide</a>
-      <a class="button" href="https://github.com/busforge/busforge">Source on GitHub</a>
-    </div>
+<body>
+  <header class="wrap topbar">
+    <a class="lockup" href="/" aria-label="Busforge home">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <defs>
+          <linearGradient id="bf" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffc270"/>
+            <stop offset=".5" stop-color="#f3a44a"/>
+            <stop offset="1" stop-color="#e1862a"/>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="7" fill="url(#bf)"/>
+        <g fill="none" stroke="#221202" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 22.5H28"/>
+          <path d="M9 22.5V15"/>
+          <path d="M23 22.5V15"/>
+          <path d="M16 22.5V11.5"/>
+          <rect x="6.2" y="9.4" width="5.6" height="5.6" rx="1.4"/>
+          <rect x="20.2" y="9.4" width="5.6" height="5.6" rx="1.4"/>
+          <rect x="11.8" y="4.6" width="8.4" height="6.9" rx="1.7"/>
+        </g>
+        <g fill="#221202">
+          <circle cx="9" cy="22.5" r="1.7"/>
+          <circle cx="16" cy="22.5" r="1.7"/>
+          <circle cx="23" cy="22.5" r="1.7"/>
+        </g>
+      </svg>
+      <span class="word">BUSFORGE</span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <a href="https://github.com/busforge/busforge/blob/main/docs/install.md">Install</a>
+      <a class="opt" href="https://github.com/busforge/busforge/blob/main/docs/limitations.md">Limitations</a>
+      <a href="https://github.com/busforge/busforge">GitHub</a>
+    </nav>
   </header>
 
-  <main class="content">
-    <section>
-      <h2>What it does</h2>
-      <dl class="features">
-        <div><dt>Import</dt><dd>ETS 5/6 projects (<code>.knxproj</code>, password-protected ones too) and manufacturer product databases (<code>.knxprod</code>), or start with an empty project.</dd></div>
-        <div><dt>Watch</dt><dd>A live bus monitor with decoded values and group-address names, KNX Data Secure telegrams included.</dd></div>
-        <div><dt>Configure</dt><dd>The device's own parameter pages: conditions, channels, modules, translations.</dd></div>
-        <div><dt>Program</dt><dd>Parameters, group addresses and full downloads, each read back afterwards; surgical writes are backed up first.</dd></div>
-        <div><dt>Commission</dt><dd>Assign an individual address and bring up a factory-fresh device.</dd></div>
-        <div><dt>Keep</dt><dd>Restore points, drift detection between project and device, encrypted export.</dd></div>
-      </dl>
-    </section>
-
-    <section>
-      <h2>Refuse, never pretend</h2>
-      <p>Programming writes bytes into a device in a real building. Busforge refuses what it cannot do with a coded error rather than guessing, and a claim about a device names which of these was shown on that device: our bytes on it, the same bytes as ETS writes, the device acting on them, and surviving a restart. Passing tests are not counted as proof.</p>
-      <p>Which products have been tested, operation by operation, is in the <a href="https://github.com/busforge/busforge/blob/main/docs/compatibility.md">compatibility list</a>. A product nobody has tested can still be programmed where its memory model is supported, after you confirm that it is untested.</p>
-    </section>
-
-    <section>
-      <h2>Quick start</h2>
-      <pre><code>[ -f busforge-master.key ] || openssl rand -hex 32 &gt; busforge-master.key   # keep it safe
-docker run -d --name busforge --stop-timeout 1800 \
-  -p 127.0.0.1:3000:3000 \
-  -v busforge-data:/app/apps/server/data \
-  -e BUSFORGE_MASTER_KEY="$(cat busforge-master.key)" \
-  ghcr.io/busforge/busforge:latest</code></pre>
-      <p>Then open <code>http://127.0.0.1:3000</code>, create an empty project or import your ETS project, and add your KNXnet/IP interface. The master key seals the Data Secure keys Busforge stores; without it a restored backup cannot open them. The published image is for x86_64 hosts; on arm64, build it from the source. The <a href="https://github.com/busforge/busforge/blob/main/docs/install.md">install guide</a> covers the compose setup, product definitions, USB interfaces, the platforms Busforge has run on, and update, backup and restore.</p>
-      <p class="note">Busforge has no login. Keep it on a trusted network; never expose it to the internet.</p>
-    </section>
-
-    <section>
-      <h2>KNX Secure</h2>
-      <div class="split">
-        <div>
-          <h3>Data Secure: supported</h3>
-          <p>Read and program Data Secure devices, activate a factory device from its certificate, send and decode secured group telegrams. Shown on two products so far, plus the download of one secure IP interface.</p>
+  <main>
+    <section class="wrap hero">
+      <div>
+        <h1>Commission KNX from a browser.</h1>
+        <p class="lead">Busforge imports your ETS project, shows the bus live and programs real KNX devices, then reads each device back to check it holds what was written. Self-hosted in one Docker container, on Linux or a Mac.</p>
+        <div class="cta">
+          <a class="button primary" href="https://github.com/busforge/busforge/blob/main/docs/install.md">Install guide</a>
+          <a class="button" href="https://github.com/busforge/busforge">Source on GitHub</a>
         </div>
-        <div>
-          <h3>IP Secure: not supported</h3>
-          <p>Busforge connects to an interface over a plain KNXnet/IP tunnel. An interface that accepts only secure tunnelling cannot be used.</p>
+        <p class="alpha">Public alpha, for technically capable KNX users. Keep your ETS project as a backup.</p>
+      </div>
+      <figure class="shot">
+        <a href="/img/app-params.webp" class="zoom"><img src="/img/app-params.webp" width="1152" height="820" alt="Busforge device page of an OpenKNX room controller: parameter pages, two objects linked to group addresses, change markers, the untested badge and the Flash button." fetchpriority="high"></a>
+      </figure>
+    </section>
+
+    <section class="band verify" aria-labelledby="verify-h">
+      <div class="wrap">
+        <h2 id="verify-h">Every write ends with a read-back</h2>
+        <p class="intro">Busforge does not take a write on trust. After programming, it reads the device's memory and compares it with what it built, byte for byte. A device that differs is reported, never shown as done.</p>
+
+        <div class="diagram">
+          <svg class="wide" viewBox="0 0 960 288" role="img" aria-labelledby="dg-t">
+            <title id="dg-t">From ETS project to verified device: the ETS project and the product database go into Busforge, which builds the image, backs up the device, writes and reads back. Equal bytes mean verified, different bytes are reported.</title>
+            <defs>
+              <marker id="ar" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8d9399"/></marker>
+              <marker id="ar-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f3a44a"/></marker>
+              <marker id="ar-ok" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#54c57a"/></marker>
+            </defs>
+            <g fill="none" stroke-width="1.2">
+              <path d="M200 72 C224 72 224 112 244 112" stroke="#8d9399" marker-end="url(#ar)"/>
+              <path d="M200 168 C224 168 224 128 244 128" stroke="#8d9399" marker-end="url(#ar)"/>
+              <path d="M408 120 H444" stroke="#8d9399" marker-end="url(#ar)"/>
+              <path d="M592 120 H628" stroke="#8d9399" marker-end="url(#ar)"/>
+              <path class="path-draw" d="M760 120 H796" stroke="#f3a44a" stroke-width="1.6" marker-end="url(#ar-a)"/>
+              <path d="M868 152 V212" stroke="#54c57a" marker-end="url(#ar-ok)"/>
+              <path d="M820 152 V184 H696 V212" stroke="#8d9399" stroke-dasharray="5,4" marker-end="url(#ar)"/>
+            </g>
+            <g font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="middle">
+              <rect x="840" y="172" width="56" height="16" rx="2" fill="#13181d"/>
+              <text x="868" y="184" fill="#54c57a">equal</text>
+              <rect x="728" y="176" width="64" height="16" rx="2" fill="#13181d"/>
+              <text x="760" y="188" fill="#8d9399">differs</text>
+            </g>
+
+            <g font-family="'Archivo', sans-serif" text-anchor="middle">
+              <rect x="24" y="40" width="176" height="64" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
+              <text x="112" y="68" fill="#e5e8eb" font-size="16" font-weight="600">ETS project</text>
+              <text x="112" y="88" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">.knxproj</text>
+
+              <rect x="24" y="136" width="176" height="64" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
+              <text x="112" y="164" fill="#e5e8eb" font-size="16" font-weight="600">Product database</text>
+              <text x="112" y="184" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">.knxprod</text>
+
+              <rect x="248" y="88" width="160" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="328" y="116" fill="#e5e8eb" font-size="16" font-weight="600">Build the image</text>
+              <text x="328" y="136" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">parameters, tables</text>
+
+              <rect x="448" y="88" width="144" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="520" y="116" fill="#e5e8eb" font-size="16" font-weight="600">Back up</text>
+              <text x="520" y="136" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">what it changes</text>
+
+              <rect x="632" y="88" width="128" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="696" y="116" fill="#e5e8eb" font-size="16" font-weight="600">Write</text>
+              <text x="696" y="136" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">load procedure</text>
+
+              <rect x="800" y="88" width="136" height="64" rx="8" fill="rgba(243,164,74,0.12)" stroke="#f3a44a" stroke-width="1.4"/>
+              <text x="868" y="116" fill="#f3a44a" font-size="16" font-weight="700">Read back</text>
+              <text x="868" y="136" fill="#d9a46a" font-size="12" font-family="'JetBrains Mono', monospace">byte for byte</text>
+
+              <rect x="800" y="216" width="136" height="48" rx="8" fill="rgba(84,197,122,0.10)" stroke="#54c57a"/>
+              <text x="868" y="245" fill="#54c57a" font-size="16" font-weight="700">Verified</text>
+
+              <rect x="632" y="216" width="128" height="48" rx="8" fill="#090e12" stroke="#717880" stroke-dasharray="4,3"/>
+              <text x="696" y="245" fill="#c3c8cd" font-size="16" font-weight="600">Reported</text>
+            </g>
+          </svg>
+
+          <svg class="tall" viewBox="0 0 360 600" role="img" aria-labelledby="dg-t2">
+            <title id="dg-t2">From ETS project to verified device: the ETS project and the product database go into Busforge, which builds the image, backs up the device, writes and reads back. Equal bytes mean verified, different bytes are reported.</title>
+            <defs>
+              <marker id="ar2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8d9399"/></marker>
+              <marker id="ar2-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f3a44a"/></marker>
+              <marker id="ar2-ok" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#54c57a"/></marker>
+            </defs>
+            <g fill="none" stroke-width="1.2">
+              <path d="M96 76 C96 96 160 92 160 112" stroke="#8d9399" marker-end="url(#ar2)"/>
+              <path d="M264 76 C264 96 200 92 200 112" stroke="#8d9399" marker-end="url(#ar2)"/>
+              <path d="M180 172 V204" stroke="#8d9399" marker-end="url(#ar2)"/>
+              <path d="M180 264 V296" stroke="#8d9399" marker-end="url(#ar2)"/>
+              <path class="path-draw" d="M180 356 V388" stroke="#f3a44a" stroke-width="1.6" marker-end="url(#ar2-a)"/>
+              <path d="M220 448 V480 H264 V512" stroke="#54c57a" marker-end="url(#ar2-ok)"/>
+              <path d="M140 448 V480 H96 V512" stroke="#8d9399" stroke-dasharray="5,4" marker-end="url(#ar2)"/>
+            </g>
+            <g font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="middle">
+              <rect x="236" y="484" width="56" height="16" rx="2" fill="#13181d"/>
+              <text x="264" y="496" fill="#54c57a">equal</text>
+              <rect x="64" y="484" width="64" height="16" rx="2" fill="#13181d"/>
+              <text x="96" y="496" fill="#8d9399">differs</text>
+            </g>
+            <g font-family="'Archivo', sans-serif" text-anchor="middle">
+              <rect x="16" y="16" width="160" height="60" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
+              <text x="96" y="44" fill="#e5e8eb" font-size="16" font-weight="600">ETS project</text>
+              <text x="96" y="64" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">.knxproj</text>
+              <rect x="184" y="16" width="160" height="60" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
+              <text x="264" y="44" fill="#e5e8eb" font-size="16" font-weight="600">Product database</text>
+              <text x="264" y="64" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">.knxprod</text>
+
+              <rect x="80" y="116" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="180" y="140" fill="#e5e8eb" font-size="16" font-weight="600">Build the image</text>
+              <text x="180" y="160" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">parameters, tables</text>
+              <rect x="80" y="208" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="180" y="232" fill="#e5e8eb" font-size="16" font-weight="600">Back up</text>
+              <text x="180" y="252" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">what it changes</text>
+              <rect x="80" y="300" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="180" y="324" fill="#e5e8eb" font-size="16" font-weight="600">Write</text>
+              <text x="180" y="344" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">load procedure</text>
+              <rect x="80" y="392" width="200" height="56" rx="8" fill="rgba(243,164,74,0.12)" stroke="#f3a44a" stroke-width="1.4"/>
+              <text x="180" y="416" fill="#f3a44a" font-size="16" font-weight="700">Read back</text>
+              <text x="180" y="436" fill="#d9a46a" font-size="12" font-family="'JetBrains Mono', monospace">byte for byte</text>
+
+              <rect x="16" y="516" width="160" height="48" rx="8" fill="#090e12" stroke="#717880" stroke-dasharray="4,3"/>
+              <text x="96" y="545" fill="#c3c8cd" font-size="16" font-weight="600">Reported</text>
+              <rect x="184" y="516" width="160" height="48" rx="8" fill="rgba(84,197,122,0.10)" stroke="#54c57a"/>
+              <text x="264" y="545" fill="#54c57a" font-size="16" font-weight="700">Verified</text>
+            </g>
+          </svg>
+        </div>
+
+        <dl class="facts">
+          <div>
+            <dt>What a read-back proves</dt>
+            <dd>That the device holds Busforge's bytes. Whether they are the bytes ETS would write is a separate check, made against ETS captures product by product and shown in the <a href="https://github.com/busforge/busforge/blob/main/docs/compatibility.md">compatibility list</a>.</dd>
+          </div>
+          <div>
+            <dt>Drift before you write</dt>
+            <dd>Read any device and see, parameter by parameter, where it differs from your project.</dd>
+          </div>
+          <div>
+            <dt>Small writes</dt>
+            <dd>A flash writes only the regions that differ, and backs them up first.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="band" aria-labelledby="tour-h">
+      <div class="wrap">
+        <h2 id="tour-h">The application</h2>
+        <p class="intro">Screens from a demo project with six OpenKNX room controllers.</p>
+        <div class="tour">
+          <div class="row">
+            <figure class="shot">
+              <a href="/img/app-devices.webp" class="zoom"><img src="/img/app-devices.webp" width="1152" height="760" loading="lazy" alt="Device overview of the demo project: floors and rooms on the left, each room controller with its individual address and the note that it was never programmed."></a>
+            </figure>
+            <div>
+              <h3>Your building, room by room</h3>
+              <p>Every device with its individual address, its product and its programming state, under the floor and room it sits in. Start with an empty project or import the one from ETS.</p>
+            </div>
+          </div>
+          <div class="row flip">
+            <figure class="shot">
+              <a href="/img/app-ga.webp" class="zoom"><img src="/img/app-ga.webp" width="1152" height="760" loading="lazy" alt="Group address overview: main and middle groups for lighting, climate, presence and system, each address with its name and datapoint type."></a>
+            </figure>
+            <div>
+              <h3>Group addresses, with their types</h3>
+              <p>Main and middle groups, names and datapoint types, editable in place. Link an address from a device's parameter page, and the bus monitor shows its values decoded.</p>
+            </div>
+          </div>
+          <div class="pair">
+            <figure>
+              <div class="shot"><a href="/img/app-compat.webp" class="zoom"><img src="/img/app-compat.webp" width="415" height="363" loading="lazy" alt="Compatibility popover of an untested product: every operation listed as untested, with the explanation of what tested means."></a></div>
+              <figcaption class="caption">
+                <h3>What has been shown for this product</h3>
+                <p>Each operation with its state from the kept evidence. A product nobody has tested says so, and is written only after you confirm it for the project.</p>
+              </figcaption>
+            </figure>
+            <figure>
+              <div class="shot"><a href="/img/app-diag.webp" class="zoom"><img src="/img/app-diag.webp" width="671" height="575" loading="lazy" alt="Dialog to create a diagnostic package: what is read, the limits, the effect on the bus, and that the result stays on this computer."></a></div>
+              <figcaption class="caption">
+                <h3>A diagnostic package for the rest</h3>
+                <p>For a device Busforge cannot program yet, it reads identity, properties and planned memory, writes nothing, and lets you review the file before it leaves your computer.</p>
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </section>
 
-    <section>
-      <h2>Limits of the alpha</h2>
-      <p>No firmware download, no System 2 or System 300 devices, writes to System 1 devices only in one case, and powerline, RF and IP media never tested on the wire. All hardware work so far was on twisted pair. The full list, with the known issues and their workarounds, is on the <a href="https://github.com/busforge/busforge/blob/main/docs/limitations.md">limitations page</a>.</p>
+    <section class="band content" aria-labelledby="does-h">
+      <div class="wrap cols">
+        <div>
+          <h2 id="does-h">What it does</h2>
+          <p>An open alternative to ETS for your own installation, without Windows. Programming writes bytes into a device in a real building, so Busforge refuses what it cannot do with a coded error rather than guessing.</p>
+        </div>
+        <dl class="features">
+          <div><dt>Import</dt><dd>ETS 5 and 6 projects, password-protected ones too, and manufacturer product databases.</dd></div>
+          <div><dt>Watch</dt><dd>A live bus monitor with decoded values and group-address names, Data Secure telegrams included.</dd></div>
+          <div><dt>Configure</dt><dd>The device's own parameter pages: conditions, channels, modules, translations.</dd></div>
+          <div><dt>Program</dt><dd>Parameters, group addresses and full downloads, over KNXnet/IP or USB.</dd></div>
+          <div><dt>Commission</dt><dd>Assign an individual address and bring up a factory-fresh device.</dd></div>
+          <div><dt>Keep</dt><dd>Restore points, drift detection and an encrypted project export.</dd></div>
+        </dl>
+      </div>
     </section>
 
-    <section>
-      <h2>Report a problem</h2>
-      <p>Found a fault, or a device that works for you? Open an <a href="https://github.com/busforge/busforge/issues">issue on GitHub</a>, or let the app prefill one from a device's menu. The <a href="https://github.com/busforge/busforge/blob/main/docs/reporting.md">reporting guide</a> shows what the link carries and what stays out of a public issue: keys, project files and addresses.</p>
+    <section class="band content" aria-labelledby="start-h">
+      <div class="wrap cols">
+        <div>
+          <h2 id="start-h">Quick start</h2>
+          <p>One container, one data volume, one master key that seals the Data Secure keys Busforge stores. Keep the key with your backups: without it a restored backup cannot open them.</p>
+          <p>Then open <code>http://127.0.0.1:3000</code>, create an empty project or import yours, and add your KNXnet/IP interface. The <a href="https://github.com/busforge/busforge/blob/main/docs/install.md">install guide</a> covers compose, product definitions, USB interfaces, update, backup and restore, and the platforms Busforge has run on.</p>
+          <p class="note">Busforge has no login. Keep it on a trusted network and never expose it to the internet. The published image is for x86_64; on arm64, build it from the source.</p>
+        </div>
+        <div>
+<pre><code><span class="c"># once; keep this file safe</span>
+[ -f busforge-master.key ] ||
+  openssl rand -hex 32 &gt; busforge-master.key
+
+docker run -d --name busforge \
+  --stop-timeout 1800 \
+  -p 127.0.0.1:3000:3000 \
+  -v busforge-data:/app/apps/server/data \
+  -e BUSFORGE_MASTER_KEY="$(cat busforge-master.key)" \
+  ghcr.io/busforge/busforge:latest</code></pre>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>License</h2>
-      <p>Source-available under the <a href="https://github.com/busforge/busforge/blob/main/LICENSE">PolyForm Noncommercial License 1.0.0</a>: free for private, hobby, research and other noncommercial use. Commercial use, such as commissioning installations for paying clients, needs a separate license; write to <a href="mailto:thorben@fohlmeister.com">thorben@fohlmeister.com</a>.</p>
+    <section class="band" aria-labelledby="secure-h">
+      <div class="wrap">
+        <h2 id="secure-h">KNX Secure</h2>
+        <p class="intro">KNX Secure is two separate mechanisms. Busforge implements one of them.</p>
+        <div class="secure">
+          <div class="yes">
+            <p class="state">supported</p>
+            <h3>Data Secure</h3>
+            <p>Read and program Data Secure devices, activate a factory device from its certificate, send and decode secured group telegrams. Shown on two products so far, plus the download of one secure IP interface.</p>
+          </div>
+          <div class="no">
+            <p class="state">not supported</p>
+            <h3>IP Secure</h3>
+            <p>Busforge connects to an interface over a plain KNXnet/IP tunnel. An interface that accepts only secure tunnelling cannot be used.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" aria-label="Limits, reporting and license">
+      <div class="wrap closing">
+        <div>
+          <h3>Limits of the alpha</h3>
+          <p>No firmware download, no System 2 or System 300 devices, writes to System 1 devices in one case only, and powerline, RF and IP media never tried on the wire. All hardware work so far was on twisted pair. The full list and the known issues are on the <a href="https://github.com/busforge/busforge/blob/main/docs/limitations.md">limitations page</a>.</p>
+        </div>
+        <div>
+          <h3>Report a problem</h3>
+          <p>Found a fault, or a device that works for you? Open an <a href="https://github.com/busforge/busforge/issues">issue on GitHub</a>, or let the app prefill one from a device's menu. The <a href="https://github.com/busforge/busforge/blob/main/docs/reporting.md">reporting guide</a> shows what the link carries and what stays out of a public issue.</p>
+        </div>
+        <div>
+          <h3>License</h3>
+          <p>Source-available under the <a href="https://github.com/busforge/busforge/blob/main/LICENSE">PolyForm Noncommercial License 1.0.0</a>: free for private, hobby, research and other noncommercial use. Commercial use needs a separate license; see <a href="https://fohlmeister.com">fohlmeister.com</a>.</p>
+        </div>
+      </div>
     </section>
   </main>
 

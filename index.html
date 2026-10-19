@@ -198,7 +198,7 @@
     <section class="band" aria-labelledby="tour-h">
       <div class="wrap">
         <h2 id="tour-h">The application</h2>
-        <p class="intro">Screens from a demo project with six OpenKNX room controllers.</p>
+        <p class="intro">Screens from a demo project with OpenKNX room controllers and an MDT contact interface on a test bus.</p>
         <div class="tour">
           <div class="row">
             <figure class="shot">
@@ -216,6 +216,15 @@
             <div>
               <h3>Group addresses, with their types</h3>
               <p>Main and middle groups, names and datapoint types, editable in place. Link an address from a device's parameter page, and the bus monitor shows its values decoded.</p>
+            </div>
+          </div>
+          <div class="row">
+            <figure class="shot narrow">
+              <a href="/img/app-flash.webp" class="zoom"><img src="/img/app-flash.webp" width="510" height="467" loading="lazy" alt="Program dialog for an MDT door contact interface: the partial flash is refused because no configuration was verified on the device yet, and the full download preview says it will rewrite 278 bytes including the com-object table."></a>
+            </figure>
+            <div>
+              <h3>A preview before every write</h3>
+              <p>The program dialog first checks against the real device and says what it would write. Here a device that Busforge has never programmed: the partial flash is refused, and the full download shows its size before you start it.</p>
             </div>
           </div>
           <div class="pair">

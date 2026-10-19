@@ -162,6 +162,7 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
 }
 .shot img { display: block; width: 100%; height: auto; }
 .shot .zoom { display: block; cursor: zoom-in; }
+.tour .shot.narrow { max-width: 32rem; justify-self: end; width: 100%; }
 .hero .shot {
   box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.8), 0 0 0 1px rgb(243 164 74 / 0.08);
 }

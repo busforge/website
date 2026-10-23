@@ -392,11 +392,11 @@ pre .c { color: var(--soft); }
   .cols, .facts, .secure, .closing, .features { grid-template-columns: minmax(0, 1fr); }
   .band { padding: 3.5rem 0; }
   .tour { gap: 3.5rem; }
+  .diagram .wide { display: none; }
+  .diagram .tall { display: block; max-width: 24rem; margin: 0 auto; }
 }
 @media (max-width: 640px) {
   .diagram { padding: 1rem; }
-  .diagram .wide { display: none; }
-  .diagram .tall { display: block; max-width: 22rem; margin: 0 auto; }
   .topnav { gap: 1rem; font-size: 0.85rem; }
   .topnav .opt { display: none; }
   pre { font-size: 0.78rem; }

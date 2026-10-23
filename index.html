@@ -13,7 +13,7 @@
   <link rel="preload" href="/fonts/archivo-var-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body class="home-page">
   <header class="wrap topbar">
     <a class="lockup" href="/" aria-label="Busforge home">
       <svg viewBox="0 0 32 32" aria-hidden="true">
@@ -43,8 +43,8 @@
       <span class="word">BUSFORGE</span>
     </a>
     <nav class="topnav" aria-label="Main">
-      <a href="https://github.com/busforge/busforge/blob/main/docs/install.md">Install</a>
-      <a class="opt" href="https://github.com/busforge/busforge/blob/main/docs/limitations.md">Limitations</a>
+      <a href="#start">Install</a>
+      <a class="opt" href="#limits">Limitations</a>
       <a href="https://github.com/busforge/busforge">GitHub</a>
     </nav>
   </header>
@@ -61,7 +61,8 @@
         <p class="alpha">Public alpha, for technically capable KNX users. Keep your ETS project as a backup.</p>
       </div>
       <figure class="shot">
-        <a href="/img/app-params.webp" class="zoom"><img src="/img/app-params.webp" width="1152" height="820" alt="Busforge device page of an OpenKNX room controller: parameter pages, two objects linked to group addresses, change markers, the untested badge and the Flash button." fetchpriority="high"></a>
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
+        <a href="/img/app-params.webp" class="zoom"><img src="/img/app-params.webp" width="2400" height="1520" alt="Busforge device page of a presence detector: its parameter pages, an output linked to a group address with its change marker, the mark that every operation Busforge supports for this product is tested, and the Flash button." fetchpriority="high"></a>
       </figure>
     </section>
 
@@ -72,108 +73,119 @@
 
         <div class="diagram">
           <svg class="wide" viewBox="0 0 960 288" role="img" aria-labelledby="dg-t">
-            <title id="dg-t">From ETS project to verified device: the ETS project and the product database go into Busforge, which builds the image, backs up the device, writes and reads back. Equal bytes mean verified, different bytes are reported.</title>
+            <title id="dg-t">From ETS project to verified device: the ETS project and the product database go into Busforge, which builds the image, reads the device to check its mask and back up what a partial write changes, and compares. A preview stops there. Otherwise it writes, a partial write only what differs, and reads back: equal bytes mean verified, different bytes are reported.</title>
             <defs>
               <marker id="ar" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8d9399"/></marker>
               <marker id="ar-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f3a44a"/></marker>
               <marker id="ar-ok" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#54c57a"/></marker>
             </defs>
             <g fill="none" stroke-width="1.2">
-              <path d="M200 72 C224 72 224 112 244 112" stroke="#8d9399" marker-end="url(#ar)"/>
-              <path d="M200 168 C224 168 224 128 244 128" stroke="#8d9399" marker-end="url(#ar)"/>
-              <path d="M408 120 H444" stroke="#8d9399" marker-end="url(#ar)"/>
-              <path d="M592 120 H628" stroke="#8d9399" marker-end="url(#ar)"/>
-              <path class="path-draw" d="M760 120 H796" stroke="#f3a44a" stroke-width="1.6" marker-end="url(#ar-a)"/>
-              <path d="M868 152 V212" stroke="#54c57a" marker-end="url(#ar-ok)"/>
-              <path d="M820 152 V184 H696 V212" stroke="#8d9399" stroke-dasharray="5,4" marker-end="url(#ar)"/>
+              <path d="M184 72 C200 72 196 112 206 112" stroke="#8d9399" marker-end="url(#ar)"/>
+              <path d="M184 168 C200 168 196 128 206 128" stroke="#8d9399" marker-end="url(#ar)"/>
+              <path d="M342 120 H356" stroke="#8d9399" marker-end="url(#ar)"/>
+              <path d="M492 120 H506" stroke="#8d9399" marker-end="url(#ar)"/>
+              <path d="M642 120 H656" stroke="#8d9399" marker-end="url(#ar)"/>
+              <path class="path-draw" d="M792 120 H806" stroke="#f3a44a" stroke-width="1.6" marker-end="url(#ar-a)"/>
+              <path d="M576 152 V212" stroke="#8d9399" stroke-dasharray="5,4" marker-end="url(#ar)"/>
+              <path d="M876 152 V212" stroke="#54c57a" marker-end="url(#ar-ok)"/>
+              <path d="M840 152 V184 H726 V212" stroke="#8d9399" stroke-dasharray="5,4" marker-end="url(#ar)"/>
             </g>
             <g font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="middle">
-              <rect x="840" y="172" width="56" height="16" rx="2" fill="#13181d"/>
-              <text x="868" y="184" fill="#54c57a">equal</text>
-              <rect x="728" y="176" width="64" height="16" rx="2" fill="#13181d"/>
-              <text x="760" y="188" fill="#8d9399">differs</text>
+              <rect x="544" y="174" width="64" height="16" rx="2" fill="#13181d"/>
+              <text x="576" y="186" fill="#8d9399">dry run</text>
+              <rect x="848" y="174" width="56" height="16" rx="2" fill="#13181d"/>
+              <text x="876" y="186" fill="#54c57a">equal</text>
+              <rect x="744" y="178" width="64" height="16" rx="2" fill="#13181d"/>
+              <text x="776" y="190" fill="#8d9399">differs</text>
             </g>
-
             <g font-family="'Archivo', sans-serif" text-anchor="middle">
-              <rect x="24" y="40" width="176" height="64" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
-              <text x="112" y="68" fill="#e5e8eb" font-size="16" font-weight="600">ETS project</text>
-              <text x="112" y="88" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">.knxproj</text>
+              <rect x="24" y="40" width="160" height="64" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
+              <text x="104" y="69" fill="#e5e8eb" font-size="16" font-weight="600">ETS project</text>
+              <text x="104" y="88" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">.knxproj</text>
+              <rect x="24" y="136" width="160" height="64" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
+              <text x="104" y="165" fill="#e5e8eb" font-size="16" font-weight="600">Product database</text>
+              <text x="104" y="184" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">.knxprod</text>
 
-              <rect x="24" y="136" width="176" height="64" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
-              <text x="112" y="164" fill="#e5e8eb" font-size="16" font-weight="600">Product database</text>
-              <text x="112" y="184" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">.knxprod</text>
+              <rect x="210" y="88" width="132" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="276" y="117" fill="#e5e8eb" font-size="15" font-weight="600">Build the image</text>
+              <text x="276" y="136" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">parameters, tables</text>
+              <rect x="360" y="88" width="132" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="426" y="117" fill="#e5e8eb" font-size="15" font-weight="600">Read the device</text>
+              <text x="426" y="136" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">mask, backup</text>
+              <rect x="510" y="88" width="132" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="576" y="117" fill="#e5e8eb" font-size="15" font-weight="600">Compare</text>
+              <text x="576" y="136" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">against the device</text>
+              <rect x="660" y="88" width="132" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="726" y="117" fill="#e5e8eb" font-size="15" font-weight="600">Write</text>
+              <text x="726" y="136" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">load procedure</text>
+              <rect x="810" y="88" width="132" height="64" rx="8" fill="rgba(243,164,74,0.12)" stroke="#f3a44a" stroke-width="1.4"/>
+              <text x="876" y="117" fill="#f3a44a" font-size="16" font-weight="700">Read back</text>
+              <text x="876" y="136" fill="#d9a46a" font-size="11" font-family="'JetBrains Mono', monospace">byte for byte</text>
 
-              <rect x="248" y="88" width="160" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
-              <text x="328" y="116" fill="#e5e8eb" font-size="16" font-weight="600">Build the image</text>
-              <text x="328" y="136" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">parameters, tables</text>
-
-              <rect x="448" y="88" width="144" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
-              <text x="520" y="116" fill="#e5e8eb" font-size="16" font-weight="600">Back up</text>
-              <text x="520" y="136" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">what it changes</text>
-
-              <rect x="632" y="88" width="128" height="64" rx="8" fill="#090e12" stroke="#e5e8eb"/>
-              <text x="696" y="116" fill="#e5e8eb" font-size="16" font-weight="600">Write</text>
-              <text x="696" y="136" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">load procedure</text>
-
-              <rect x="800" y="88" width="136" height="64" rx="8" fill="rgba(243,164,74,0.12)" stroke="#f3a44a" stroke-width="1.4"/>
-              <text x="868" y="116" fill="#f3a44a" font-size="16" font-weight="700">Read back</text>
-              <text x="868" y="136" fill="#d9a46a" font-size="12" font-family="'JetBrains Mono', monospace">byte for byte</text>
-
-              <rect x="800" y="216" width="136" height="48" rx="8" fill="rgba(84,197,122,0.10)" stroke="#54c57a"/>
-              <text x="868" y="245" fill="#54c57a" font-size="16" font-weight="700">Verified</text>
-
-              <rect x="632" y="216" width="128" height="48" rx="8" fill="#090e12" stroke="#717880" stroke-dasharray="4,3"/>
-              <text x="696" y="245" fill="#c3c8cd" font-size="16" font-weight="600">Reported</text>
+              <rect x="510" y="216" width="132" height="48" rx="8" fill="#090e12" stroke="#717880" stroke-dasharray="4,3"/>
+              <text x="576" y="245" fill="#c3c8cd" font-size="16" font-weight="600">Preview</text>
+              <rect x="660" y="216" width="132" height="48" rx="8" fill="#090e12" stroke="#717880" stroke-dasharray="4,3"/>
+              <text x="726" y="245" fill="#c3c8cd" font-size="16" font-weight="600">Reported</text>
+              <rect x="810" y="216" width="132" height="48" rx="8" fill="rgba(84,197,122,0.10)" stroke="#54c57a"/>
+              <text x="876" y="245" fill="#54c57a" font-size="16" font-weight="700">Verified</text>
             </g>
           </svg>
 
-          <svg class="tall" viewBox="0 0 360 600" role="img" aria-labelledby="dg-t2">
-            <title id="dg-t2">From ETS project to verified device: the ETS project and the product database go into Busforge, which builds the image, backs up the device, writes and reads back. Equal bytes mean verified, different bytes are reported.</title>
+          <svg class="tall" viewBox="0 0 360 664" role="img" aria-labelledby="dg-t2">
+            <title id="dg-t2">From ETS project to verified device: the ETS project and the product database go into Busforge, which builds the image, reads the device to check its mask and back up what a partial write changes, and compares. A preview stops there. Otherwise it writes, a partial write only what differs, and reads back: equal bytes mean verified, different bytes are reported.</title>
             <defs>
               <marker id="ar2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8d9399"/></marker>
               <marker id="ar2-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f3a44a"/></marker>
               <marker id="ar2-ok" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#54c57a"/></marker>
             </defs>
             <g fill="none" stroke-width="1.2">
-              <path d="M96 76 C96 96 160 92 160 112" stroke="#8d9399" marker-end="url(#ar2)"/>
-              <path d="M264 76 C264 96 200 92 200 112" stroke="#8d9399" marker-end="url(#ar2)"/>
-              <path d="M180 172 V204" stroke="#8d9399" marker-end="url(#ar2)"/>
-              <path d="M180 264 V296" stroke="#8d9399" marker-end="url(#ar2)"/>
-              <path class="path-draw" d="M180 356 V388" stroke="#f3a44a" stroke-width="1.6" marker-end="url(#ar2-a)"/>
-              <path d="M220 448 V480 H264 V512" stroke="#54c57a" marker-end="url(#ar2-ok)"/>
-              <path d="M140 448 V480 H96 V512" stroke="#8d9399" stroke-dasharray="5,4" marker-end="url(#ar2)"/>
+              <path d="M96 76 C96 96 104 92 104 112" stroke="#8d9399" marker-end="url(#ar2)"/>
+              <path d="M264 76 C264 96 144 92 144 112" stroke="#8d9399" marker-end="url(#ar2)"/>
+              <path d="M124 172 V204" stroke="#8d9399" marker-end="url(#ar2)"/>
+              <path d="M124 264 V296" stroke="#8d9399" marker-end="url(#ar2)"/>
+              <path d="M124 356 V388" stroke="#8d9399" marker-end="url(#ar2)"/>
+              <path d="M224 328 H244" stroke="#8d9399" stroke-dasharray="5,4" marker-end="url(#ar2)"/>
+              <path class="path-draw" d="M124 448 V480" stroke="#f3a44a" stroke-width="1.6" marker-end="url(#ar2-a)"/>
+              <path d="M164 540 V568 H264 V592" stroke="#54c57a" marker-end="url(#ar2-ok)"/>
+              <path d="M96 540 V592" stroke="#8d9399" stroke-dasharray="5,4" marker-end="url(#ar2)"/>
             </g>
             <g font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="middle">
-              <rect x="236" y="484" width="56" height="16" rx="2" fill="#13181d"/>
-              <text x="264" y="496" fill="#54c57a">equal</text>
-              <rect x="64" y="484" width="64" height="16" rx="2" fill="#13181d"/>
-              <text x="96" y="496" fill="#8d9399">differs</text>
+              <rect x="236" y="572" width="56" height="16" rx="2" fill="#13181d"/>
+              <text x="264" y="584" fill="#54c57a">equal</text>
+              <rect x="64" y="572" width="64" height="16" rx="2" fill="#13181d"/>
+              <text x="96" y="584" fill="#8d9399">differs</text>
             </g>
             <g font-family="'Archivo', sans-serif" text-anchor="middle">
               <rect x="16" y="16" width="160" height="60" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
-              <text x="96" y="44" fill="#e5e8eb" font-size="16" font-weight="600">ETS project</text>
-              <text x="96" y="64" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">.knxproj</text>
+              <text x="96" y="43" fill="#e5e8eb" font-size="16" font-weight="600">ETS project</text>
+              <text x="96" y="62" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">.knxproj</text>
               <rect x="184" y="16" width="160" height="60" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
-              <text x="264" y="44" fill="#e5e8eb" font-size="16" font-weight="600">Product database</text>
-              <text x="264" y="64" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">.knxprod</text>
+              <text x="264" y="43" fill="#e5e8eb" font-size="16" font-weight="600">Product database</text>
+              <text x="264" y="62" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">.knxprod</text>
 
-              <rect x="80" y="116" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
-              <text x="180" y="140" fill="#e5e8eb" font-size="16" font-weight="600">Build the image</text>
-              <text x="180" y="160" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">parameters, tables</text>
-              <rect x="80" y="208" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
-              <text x="180" y="232" fill="#e5e8eb" font-size="16" font-weight="600">Back up</text>
-              <text x="180" y="252" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">what it changes</text>
-              <rect x="80" y="300" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
-              <text x="180" y="324" fill="#e5e8eb" font-size="16" font-weight="600">Write</text>
-              <text x="180" y="344" fill="#8d9399" font-size="12" font-family="'JetBrains Mono', monospace">load procedure</text>
-              <rect x="80" y="392" width="200" height="56" rx="8" fill="rgba(243,164,74,0.12)" stroke="#f3a44a" stroke-width="1.4"/>
-              <text x="180" y="416" fill="#f3a44a" font-size="16" font-weight="700">Read back</text>
-              <text x="180" y="436" fill="#d9a46a" font-size="12" font-family="'JetBrains Mono', monospace">byte for byte</text>
+              <rect x="24" y="116" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="124" y="141" fill="#e5e8eb" font-size="16" font-weight="600">Build the image</text>
+              <text x="124" y="160" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">parameters, tables</text>
+              <rect x="24" y="208" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="124" y="233" fill="#e5e8eb" font-size="16" font-weight="600">Read the device</text>
+              <text x="124" y="252" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">mask, backup</text>
+              <rect x="24" y="300" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="124" y="325" fill="#e5e8eb" font-size="16" font-weight="600">Compare</text>
+              <text x="124" y="344" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">against the device</text>
+              <rect x="248" y="304" width="96" height="48" rx="8" fill="#090e12" stroke="#717880" stroke-dasharray="4,3"/>
+              <text x="296" y="325" fill="#c3c8cd" font-size="15" font-weight="600">Preview</text>
+              <text x="296" y="344" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">dry run</text>
+              <rect x="24" y="392" width="200" height="56" rx="8" fill="#090e12" stroke="#e5e8eb"/>
+              <text x="124" y="417" fill="#e5e8eb" font-size="16" font-weight="600">Write</text>
+              <text x="124" y="436" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">load procedure</text>
+              <rect x="24" y="484" width="200" height="56" rx="8" fill="rgba(243,164,74,0.12)" stroke="#f3a44a" stroke-width="1.4"/>
+              <text x="124" y="509" fill="#f3a44a" font-size="16" font-weight="700">Read back</text>
+              <text x="124" y="528" fill="#d9a46a" font-size="11" font-family="'JetBrains Mono', monospace">byte for byte</text>
 
-              <rect x="16" y="516" width="160" height="48" rx="8" fill="#090e12" stroke="#717880" stroke-dasharray="4,3"/>
-              <text x="96" y="545" fill="#c3c8cd" font-size="16" font-weight="600">Reported</text>
-              <rect x="184" y="516" width="160" height="48" rx="8" fill="rgba(84,197,122,0.10)" stroke="#54c57a"/>
-              <text x="264" y="545" fill="#54c57a" font-size="16" font-weight="700">Verified</text>
+              <rect x="16" y="596" width="160" height="48" rx="8" fill="#090e12" stroke="#717880" stroke-dasharray="4,3"/>
+              <text x="96" y="625" fill="#c3c8cd" font-size="16" font-weight="600">Reported</text>
+              <rect x="184" y="596" width="160" height="48" rx="8" fill="rgba(84,197,122,0.10)" stroke="#54c57a"/>
+              <text x="264" y="625" fill="#54c57a" font-size="16" font-weight="700">Verified</text>
             </g>
           </svg>
         </div>
@@ -198,11 +210,12 @@
     <section class="band" aria-labelledby="tour-h">
       <div class="wrap">
         <h2 id="tour-h">The application</h2>
-        <p class="intro">Screens from a demo project with OpenKNX room controllers and an MDT contact interface on a test bus.</p>
+        <p class="intro">Screens from the demo project: an invented house with seventeen devices of ten manufacturers.</p>
         <div class="tour">
           <div class="row">
             <figure class="shot">
-              <a href="/img/app-devices.webp" class="zoom"><img src="/img/app-devices.webp" width="1152" height="760" loading="lazy" alt="Device overview of the demo project: floors and rooms on the left, each room controller with its individual address and the note that it was never programmed."></a>
+              <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
+              <a href="/img/app-devices.webp" class="zoom"><img src="/img/app-devices.webp" width="2400" height="1520" loading="lazy" alt="Device overview of the demo house: floors and rooms on the left, each device under its room with its individual address, manufacturer and programming state."></a>
             </figure>
             <div>
               <h3>Your building, room by room</h3>
@@ -211,7 +224,8 @@
           </div>
           <div class="row flip">
             <figure class="shot">
-              <a href="/img/app-ga.webp" class="zoom"><img src="/img/app-ga.webp" width="1152" height="760" loading="lazy" alt="Group address overview: main and middle groups for lighting, climate, presence and system, each address with its name and datapoint type."></a>
+              <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
+              <a href="/img/app-ga.webp" class="zoom"><img src="/img/app-ga.webp" width="2400" height="1520" loading="lazy" alt="Group address overview: main and middle groups for central functions, lighting, blinds, heating and presence, each address with its name and datapoint type."></a>
             </figure>
             <div>
               <h3>Group addresses, with their types</h3>
@@ -220,6 +234,7 @@
           </div>
           <div class="row">
             <figure class="shot narrow">
+              <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
               <a href="/img/app-flash.webp" class="zoom"><img src="/img/app-flash.webp" width="510" height="467" loading="lazy" alt="Program dialog for an MDT door contact interface: the partial flash is refused because no configuration was verified on the device yet, and the full download preview says it will rewrite 278 bytes including the com-object table."></a>
             </figure>
             <div>
@@ -227,21 +242,25 @@
               <p>The program dialog first checks against the real device and says what it would write. Here a device that Busforge has never programmed: the partial flash is refused, and the full download shows its size before you start it.</p>
             </div>
           </div>
-          <div class="pair">
-            <figure>
-              <div class="shot"><a href="/img/app-compat.webp" class="zoom"><img src="/img/app-compat.webp" width="415" height="363" loading="lazy" alt="Compatibility popover of an untested product: every operation listed as untested, with the explanation of what tested means."></a></div>
-              <figcaption class="caption">
-                <h3>What has been shown for this product</h3>
-                <p>Each operation with its state from the kept evidence. A product nobody has tested says so, and is written only after you confirm it for the project.</p>
-              </figcaption>
+          <div class="row flip">
+            <figure class="shot">
+              <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
+              <a href="/img/app-compat.webp" class="zoom"><img src="/img/app-compat.webp" width="1424" height="1005" loading="lazy" alt="Compatibility popover of a presence detector: every operation, from reading parameters to the structural flash, tested on hardware with firmware 6, and the explanation of what tested means."></a>
             </figure>
-            <figure>
-              <div class="shot"><a href="/img/app-diag.webp" class="zoom"><img src="/img/app-diag.webp" width="671" height="575" loading="lazy" alt="Dialog to create a diagnostic package: what is read, the limits, the effect on the bus, and that the result stays on this computer."></a></div>
-              <figcaption class="caption">
-                <h3>A diagnostic package for the rest</h3>
-                <p>For a device Busforge cannot program yet, it reads identity, properties and planned memory, writes nothing, and lets you review the file before it leaves your computer.</p>
-              </figcaption>
+            <div>
+              <h3>What has been shown for this product</h3>
+              <p>Each operation with its state from the kept evidence, here a presence detector tested on everything Busforge supports for it. A product nobody has tested says so, and is written only after you confirm it for the project.</p>
+            </div>
+          </div>
+          <div class="row">
+            <figure class="shot">
+              <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
+              <a href="/img/app-diag.webp" class="zoom"><img src="/img/app-diag.webp" width="1440" height="1088" loading="lazy" alt="The dialog to create a diagnostic package over the device page: what is read, the limits, the effect on the bus, and that the result stays on this computer."></a>
             </figure>
+            <div>
+              <h3>A diagnostic package for the rest</h3>
+              <p>For a device Busforge cannot program yet, it reads identity, properties and planned memory, writes nothing, and lets you review the file before it leaves your computer.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -264,7 +283,7 @@
       </div>
     </section>
 
-    <section class="band content" aria-labelledby="start-h">
+    <section class="band content" id="start" aria-labelledby="start-h">
       <div class="wrap cols">
         <div>
           <h2 id="start-h">Quick start</h2>
@@ -308,7 +327,7 @@ docker run -d --name busforge \
 
     <section class="band" aria-label="Limits, reporting and license">
       <div class="wrap closing">
-        <div>
+        <div id="limits">
           <h3>Limits of the alpha</h3>
           <p>No firmware download, no System 2 or System 300 devices, writes to System 1 devices in one case only, and powerline, RF and IP media never tried on the wire. All hardware work so far was on twisted pair. The full list and the known issues are on the <a href="https://github.com/busforge/busforge/blob/main/docs/limitations.md">limitations page</a>.</p>
         </div>
@@ -328,5 +347,36 @@ docker run -d --name busforge \
     <p>Busforge is an independent project. It is not affiliated with, endorsed by, sponsored by or certified by KNX Association cvba. KNX and ETS are registered trademarks of KNX Association cvba, Brussels, Belgium, used here only to name the standard and file formats Busforge interoperates with. Programming KNX devices can leave them misconfigured; use at your own risk and back up your ETS project first.</p>
     <p><a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a></p>
   </footer>
+
+  <dialog class="lightbox" aria-label="Screenshot">
+    <button type="button" class="close" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <img alt="">
+  </dialog>
+  <script>
+    // Opens a screenshot in place; without script the link opens the image itself.
+    const box = document.querySelector(".lightbox");
+    const big = box.querySelector("img");
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest("a.zoom");
+      if (!link || !box.showModal || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      const img = link.querySelector("img");
+      big.src = link.href;
+      big.alt = img.alt;
+      box.showModal();
+      document.documentElement.classList.add("locked");
+    });
+    box.querySelector(".close").addEventListener("click", () => box.close());
+    // The image fills the dialog's centre; a press and release outside it land on the dialog, i.e. the backdrop.
+    let pressedOutside = false;
+    box.addEventListener("pointerdown", (e) => { pressedOutside = e.target === box; });
+    box.addEventListener("click", (e) => { if (e.target === box && pressedOutside) box.close(); });
+    box.addEventListener("close", () => {
+      document.documentElement.classList.remove("locked");
+      big.removeAttribute("src");
+    });
+  </script>
 </body>
 </html>

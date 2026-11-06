@@ -22,6 +22,13 @@
   --primary: #f3a44a;
   --primary-ink: #221202;
   --ok: #54c57a;
+  --hover: #21272e;
+  --lead: #c3c8cd;
+  /* The app's radius scale: controls and marks, cards and page containers. */
+  --r-md: 6px;
+  --r-xl: 12px;
+  /* The app's keyboard focus ring: 3 px of amber at half strength. */
+  --ring: 0 0 0 3px rgb(243 164 74 / 0.5);
   --sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, monospace;
   --gh: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z'/%3E%3C/svg%3E");
@@ -47,8 +54,8 @@ html.locked { overflow: hidden; }
   html { scroll-behavior: smooth; }
 }
 
-/* Every link to GitHub carries its mark. */
-a[href^="https://github.com/"]::before {
+/* Navigation and buttons that lead to the repository carry the GitHub mark. */
+.gh::before {
   content: "";
   display: inline-block;
   width: 0.95em;
@@ -59,12 +66,19 @@ a[href^="https://github.com/"]::before {
   -webkit-mask: var(--gh) center / contain no-repeat;
   mask: var(--gh) center / contain no-repeat;
 }
-/* Keeps the mark on the line of the words it belongs to. */
-.band p a[href^="https://github.com/"] { white-space: nowrap; }
-a:focus-visible, .button:focus-visible {
+a:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 3px;
   border-radius: 4px;
+}
+.eyebrow {
+  margin: 0 0 1rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 code, pre { font-family: var(--mono); }
 
@@ -108,7 +122,7 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--muted);
   margin: 2rem 0 0.5rem;
 }
 .legal p { margin: 0 0 0.75rem; }
@@ -159,17 +173,36 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
+  min-height: 2.75rem;
   text-decoration: none;
 }
 .lockup svg { width: 34px; height: 34px; filter: drop-shadow(0 0 14px rgb(243 164 74 / 0.35)); }
-.lockup .word { font-weight: 800; letter-spacing: 0.2em; font-size: 0.95rem; }
-.topnav { display: flex; gap: 1.5rem; font-size: 0.92rem; }
-.topnav a { text-decoration: none; color: var(--muted); }
-.topnav a:hover { color: var(--fg); }
+.lockup .names { display: flex; flex-direction: column; }
+.lockup .word { font-weight: 800; letter-spacing: 0.2em; font-size: 0.95rem; line-height: 1.2; }
+.lockup .tagline {
+  margin-top: 0.3rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1;
+}
+.topnav { display: flex; align-items: center; gap: 0.5rem; font-size: 0.92rem; }
+.topnav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0 0.6rem;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  color: var(--muted);
+}
+.topnav a:hover { color: var(--fg); background: var(--hover); }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
   gap: 3.5rem;
   align-items: center;
   padding-top: 3.5rem;
@@ -178,36 +211,45 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
 .hero h1 {
   margin: 0 0 1.25rem;
   font-weight: 800;
-  font-size: clamp(2.4rem, 5.2vw, 4rem);
+  font-size: clamp(2.4rem, 4.4vw, 3.6rem);
   line-height: 1.02;
   letter-spacing: -0.025em;
+  text-wrap: balance;
 }
-.hero .lead { margin: 0 0 1.75rem; font-size: 1.15rem; color: #c3c8cd; max-width: 32rem; }
-.hero .alpha { margin: 1.5rem 0 0; color: var(--muted); font-size: 0.9rem; max-width: 30rem; }
+.hero .lead { margin: 0 0 1.75rem; font-size: 1.15rem; color: var(--lead); max-width: 32rem; }
+.hero .alpha { margin: 1.25rem 0 0; color: var(--muted); font-size: 0.9rem; max-width: 30rem; }
 .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+/* The app's Button with a 44 px touch height and 6 px radius: default (amber) for the one primary
+   action, outline, ghost; sm (32 px) and icon as in the app. */
 .button {
-  display: inline-block;
-  padding: 0.7rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 1.15rem;
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: var(--r-md);
+  background: var(--bg);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.95rem;
+  white-space: nowrap;
 }
-.button:hover { border-color: var(--muted); }
-.button.primary {
-  background: linear-gradient(#ffc270, var(--primary) 55%, #e1862a);
-  border-color: #e1862a;
-  color: var(--primary-ink);
-  box-shadow: 0 0 24px rgb(243 164 74 / 0.25);
-}
-.button.primary:hover { filter: brightness(1.06); }
+.button:hover { background: var(--hover); }
+.button:focus-visible { outline: none; border-radius: var(--r-md); box-shadow: var(--ring); }
+.button.primary { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.button.primary:hover { background: rgb(243 164 74 / 0.9); }
+.button.ghost { border-color: transparent; background: transparent; }
+.button.ghost::before { background: var(--muted); }
+.button.ghost:hover { background: var(--hover); }
+.button.sm { min-height: 2rem; padding: 0 0.75rem; font-size: 0.8rem; font-weight: 500; }
+.button.icon { width: 2.75rem; padding: 0; }
 
 /* App screenshots sit in a browser window, lifted off the page. */
 .shot {
   margin: 0;
   border: 1px solid #343c43;
-  border-radius: 0.75rem;
+  border-radius: var(--r-xl);
   overflow: hidden;
   background: #0d1216;
   box-shadow:
@@ -230,7 +272,7 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
   flex: 0 1 16rem;
   margin: 0 auto;
   padding: 0.1rem 0.75rem;
-  border-radius: 0.375rem;
+  border-radius: var(--r-md);
   background: var(--bg);
   color: var(--muted);
   font-family: var(--mono);
@@ -241,9 +283,31 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
 }
 .chrome::after { content: ""; width: 2.6rem; }
 .shot img { display: block; width: 100%; height: auto; }
-.shot .zoom { display: block; cursor: zoom-in; }
+.shot .zoom { position: relative; display: block; cursor: zoom-in; }
 .shot .zoom:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; border-radius: 0; }
-.tour .shot.narrow { max-width: 32rem; justify-self: end; width: 100%; }
+/* Every screenshot opens larger. With a mouse the corner mark says so on hover; on touch the hero's
+   caption and the strip under each tour screen do. */
+.shot .zoom::after {
+  content: "";
+  position: absolute;
+  left: 0.6rem;
+  bottom: 0.6rem;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: rgb(19 24 29 / 0.9) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c3c8cd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7'/%3E%3C/svg%3E") center / 0.95rem no-repeat;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.shot .zoom:hover::after, .shot .zoom:focus-visible::after { opacity: 1; }
+.shot figcaption {
+  padding: 0.55rem 0.9rem;
+  border-top: 1px solid var(--border);
+  background: var(--raise);
+  font-size: 0.82rem;
+  color: var(--muted);
+}
 .hero .shot {
   box-shadow:
     0 1px 0 rgb(255 255 255 / 0.05) inset,
@@ -278,24 +342,32 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
   box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.9);
   cursor: default;
 }
-.lightbox .close {
-  position: fixed;
-  top: 0.9rem;
-  right: 0.9rem;
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  background: var(--card);
-  color: var(--fg);
-  cursor: pointer;
-}
-.lightbox .close:hover { background: #21272e; border-color: var(--muted); }
-.lightbox .close:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.lightbox .close, .lightbox .size { position: fixed; top: 0.9rem; background: var(--card); }
+.lightbox .close { right: 0.9rem; }
+.lightbox .size { right: 4.15rem; }
+.lightbox .close:hover, .lightbox .size:hover { background: var(--hover); }
+.lightbox.actual .size { border-color: var(--primary); color: var(--primary); }
 .lightbox .close svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+/* Narrow screens: the capture at the app's own size, scrolled in both directions. */
+.lightbox.actual[open] { display: block; padding: 3.75rem 1rem 1rem; }
+.lightbox.actual img { max-width: none; max-height: none; margin: 0 auto; }
+.lightbox.zoomable img { cursor: zoom-in; }
+.lightbox.zoomable.actual img { cursor: zoom-out; }
+.lightbox .hint {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  translate: -50% 0;
+  margin: 0;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--card);
+  color: var(--lead);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
 @media (prefers-reduced-motion: no-preference) {
   .lightbox[open] img { animation: rise 0.18s ease-out; }
   @keyframes rise { from { opacity: 0; transform: scale(0.98); } }
@@ -309,21 +381,48 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
   line-height: 1.1;
   letter-spacing: -0.015em;
 }
-.band .intro { margin: 0 0 2.5rem; max-width: 40rem; color: #c3c8cd; font-size: 1.05rem; }
-.band p a, .band li a { text-decoration: none; border-bottom: 1px solid rgb(243 164 74 / 0.6); }
-.band p a:hover, .band li a:hover { color: var(--primary); }
+.band .intro { margin: 0 0 2.5rem; max-width: 40rem; color: var(--lead); font-size: 1.05rem; }
+/* One link style in running text: a quiet underline, amber on hover. */
+.band :is(p, dd, li) a { text-decoration: none; border-bottom: 1px solid rgb(141 147 153 / 0.6); }
+.band :is(p, dd, li) a:hover { color: var(--primary); border-color: var(--primary); }
 
 /* Verification diagram: the page's one bold element */
 .verify { background: radial-gradient(60rem 24rem at 70% 0%, rgb(243 164 74 / 0.07), transparent 70%); }
 .diagram {
-  margin: 0 0 2rem;
+  margin: 0;
   padding: 1.5rem;
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: var(--r-xl);
   background: var(--card);
 }
 .diagram svg { display: block; width: 100%; height: auto; }
-.diagram .tall { display: none; }
+.diagram .tall, .diagram .tall-steps { display: none; }
+.tall-steps { margin-top: 1rem; border-top: 1px solid var(--border); }
+.tall-steps summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  padding-top: 0.5rem;
+  color: var(--lead);
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+.tall-steps summary::-webkit-details-marker { display: none; }
+.tall-steps summary:hover { color: var(--fg); }
+.tall-steps summary:focus-visible { outline: none; border-radius: var(--r-md); box-shadow: var(--ring); }
+.tall-steps summary::before, .code .arm summary::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  rotate: -45deg;
+  transition: rotate 0.15s;
+}
+.tall-steps[open] summary::before, .code .arm[open] summary::before { rotate: 45deg; }
+.tall-steps svg { display: block; width: 100%; max-width: 24rem; height: auto; margin: 0.75rem auto 0; }
 .diagram .path-draw { stroke-dasharray: 20; stroke-dashoffset: 20; animation: draw 1.2s 0.6s ease-out forwards; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) {
@@ -331,10 +430,11 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
 }
 .facts {
   display: grid;
-  grid-template-columns: 1.15fr 1fr 0.9fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  margin: 0;
+  margin: 0 0 2.5rem;
 }
+.facts > div:first-child { grid-column: 1 / -1; max-width: 46rem; }
 .facts dt { font-weight: 700; margin: 0 0 0.35rem; }
 .facts dd { margin: 0; color: var(--muted); font-size: 0.95rem; }
 
@@ -343,30 +443,155 @@ footer a:hover { color: var(--primary); border-color: var(--primary); }
 .tour figure { margin: 0; }
 .tour .row {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  gap: 2.5rem;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 3rem;
   align-items: center;
 }
-.tour .row.flip { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); }
+.tour .row.flip { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+/* A dialog or popover cut from a screen stands on its own, without the browser frame. */
+.tour .shot.panel { justify-self: end; max-width: 36rem; width: 100%; }
+.tour .flip .shot.panel { justify-self: start; }
+.tour .shot.panel.tall { max-width: 30rem; }
+/* Without hover, each tour screen says under itself that it opens larger. */
+@media (hover: none) {
+  .tour .shot::after {
+    content: "Tap to enlarge";
+    display: block;
+    padding: 0.55rem 0.9rem;
+    border-top: 1px solid var(--border);
+    background: var(--raise);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+}
 .tour .row.flip .shot { order: 2; }
 .tour h3 { margin: 0 0 0.5rem; font-size: 1.3rem; font-weight: 700; }
 .tour p { margin: 0; color: var(--muted); }
 
+/* Evidence strip under the hero */
+.proof {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+  margin-bottom: 4rem;
+}
+.proof .eyebrow { margin: 0; }
+.proof-text { margin: 0; color: var(--lead); max-width: 34rem; }
+.proof .more {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-decoration: underline 1px var(--border);
+  text-underline-offset: 0.3em;
+}
+.proof .more:hover { color: var(--fg); text-decoration-color: var(--muted); }
+/* Manufacturer names as the app's md outline Badge: neutral, never a logo. */
+.makers { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.25rem 0 0; padding: 0; list-style: none; }
+.makers li {
+  display: inline-flex;
+  align-items: center;
+  height: 1.5rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--card);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--lead);
+}
+
+/* Quick start: two steps, prose beside its commands */
+.steps { display: grid; gap: 3.5rem; margin-top: 2rem; }
+.step { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 3rem; align-items: start; }
+.step .eyebrow { color: var(--fg); }
+.code { position: relative; border: 1px solid var(--border); border-radius: var(--r-xl); background: var(--card); overflow: hidden; }
+.code .bar {
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  padding: 0 0.5rem 0 1.1rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.code .copy { position: absolute; top: 0.25rem; right: 0.4rem; }
+.code .arm { border-top: 1px solid var(--border); }
+.code .arm summary {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  padding: 0 1.1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  list-style: none;
+  cursor: pointer;
+}
+.code .arm summary::-webkit-details-marker { display: none; }
+.code .arm summary:hover { color: var(--fg); background: var(--hover); }
+/* The card clips an outer ring, so this one is drawn inside. */
+.code .arm summary:focus-visible { outline: none; box-shadow: inset 0 0 0 3px rgb(243 164 74 / 0.5); }
+.code .arm p { margin: 0.25rem 1.1rem 0.5rem; color: var(--muted); font-size: 0.9rem; }
+.code .arm p code { font-size: 0.88em; color: var(--fg); }
+@media (pointer: coarse) {
+  .code .bar { height: 3.25rem; }
+  .code .copy { top: 0.25rem; right: 0.25rem; min-height: 2.75rem; padding: 0 1rem; }
+}
+
 /* Text sections */
-.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; }
-.features { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.5rem; }
-.features dt { font-weight: 700; }
-.features dd { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.95rem; }
+.features { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem 2.5rem; }
+.features > div { padding-top: 1rem; border-top: 1px solid var(--border); }
+.features dt { display: flex; align-items: center; gap: 0.55rem; font-weight: 700; }
+.features dd { margin: 0.3rem 0 0; color: var(--muted); font-size: 0.95rem; }
+.features dt svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Limits: one row per thing Busforge does not support or has not shown, its state as a neutral Badge. */
+.limits { max-width: 52rem; margin: 0 0 1.75rem; display: grid; }
+.limits > div { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: 0.25rem 1.25rem; padding: 0.9rem 0; border-top: 1px solid var(--border); }
+.limits dt { font-weight: 700; }
+.limits dd { margin: 0; color: var(--muted); font-size: 0.95rem; }
+.limits .mark {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  height: 1.5rem;
+  margin: 0 0 0.35rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--lead);
+}
+.more-limits { margin: 0; color: var(--muted); }
+.nw { white-space: nowrap; }
 .content p { margin: 0 0 1rem; max-width: 40rem; }
-.content p code { font-size: 0.88em; color: #f6c58a; }
+.content p code { font-size: 0.88em; color: var(--fg); }
+/* Horizontal scroll shadows say a line goes on past the edge. */
 pre {
-  margin: 0 0 1.25rem;
+  margin: 0;
   padding: 1.1rem 1.25rem;
   overflow-x: auto;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--primary);
-  border-radius: 0.5rem;
+  background:
+    linear-gradient(to right, var(--card) 40%, rgb(19 24 29 / 0)) left / 2rem 100% no-repeat local,
+    linear-gradient(to left, var(--card) 40%, rgb(19 24 29 / 0)) right / 2rem 100% no-repeat local,
+    linear-gradient(to right, rgb(141 147 153 / 0.45), transparent) left / 1.25rem 100% no-repeat scroll,
+    linear-gradient(to left, rgb(141 147 153 / 0.45), transparent) right / 1.25rem 100% no-repeat scroll,
+    var(--card);
   font-size: 0.85rem;
   line-height: 1.65;
   color: var(--fg);
@@ -374,30 +599,67 @@ pre {
 pre .c { color: var(--soft); }
 .note { color: var(--muted); font-size: 0.92rem; }
 .secure { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.secure > div { padding: 1.4rem 1.5rem; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--card); }
-.secure > div.yes { border-color: rgb(84 197 122 / 0.45); }
+.secure > div { padding: 1.4rem 1.5rem; border: 1px solid var(--border); border-radius: var(--r-xl); background: var(--card); }
 .secure h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
-.secure .state { font-family: var(--mono); font-size: 0.8rem; margin: 0 0 0.75rem; }
-.secure .yes .state { color: var(--ok); }
-.secure .no .state { color: var(--muted); }
+/* The app's md Badge: ok for what was shown on hardware, neutral otherwise. */
+.secure .state {
+  display: inline-flex;
+  align-items: center;
+  height: 1.5rem;
+  margin: 0 0 0.9rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.secure .yes .state { color: var(--ok); border-color: rgb(84 197 122 / 0.4); background: rgb(84 197 122 / 0.1); }
 .secure p { margin: 0; color: var(--muted); font-size: 0.95rem; }
-.closing { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 2.5rem; }
+.closing { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2.5rem; margin-top: 1.25rem; }
 .closing h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
 .closing p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+.final { background: radial-gradient(50rem 20rem at 20% 100%, rgb(243 164 74 / 0.06), transparent 70%); }
+.final .intro { margin-bottom: 1.75rem; }
 
 @media (max-width: 900px) {
   .hero { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; padding-top: 2rem; padding-bottom: 3.5rem; }
   .tour .row, .tour .row.flip { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
   .tour .row.flip .shot { order: 0; }
-  .cols, .facts, .secure, .closing, .features { grid-template-columns: minmax(0, 1fr); }
+  .facts, .secure, .closing, .step { grid-template-columns: minmax(0, 1fr); }
+  .step { gap: 1.25rem; }
+  .features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .proof { margin-bottom: 3rem; }
   .band { padding: 3.5rem 0; }
   .tour { gap: 3.5rem; }
   .diagram .wide { display: none; }
   .diagram .tall { display: block; max-width: 24rem; margin: 0 auto; }
+  .diagram .tall-steps { display: block; }
 }
 @media (max-width: 640px) {
   .diagram { padding: 1rem; }
-  .topnav { gap: 1rem; font-size: 0.85rem; }
+  .lockup .tagline { display: none; }
+  .topnav { gap: 0.25rem; }
   .topnav .opt { display: none; }
-  pre { font-size: 0.78rem; }
+  .topnav a { min-height: 2.75rem; }
+  .topnav .gh { width: 2.75rem; justify-content: center; padding: 0; }
+  .topnav .gh::before { margin: 0; width: 1.1rem; height: 1.1rem; }
+  .topnav .gh .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .hero .lead { font-size: 1.05rem; }
+  .band .intro { font-size: 1rem; }
+  .cta .button { flex: 1 1 auto; }
+  .home-page::before { background-image: radial-gradient(circle, rgb(229 232 235 / 0.08) 1px, transparent 1.4px); }
+  .limits > div { grid-template-columns: minmax(0, 1fr); }
+  .features { grid-template-columns: minmax(0, 1fr); }
+  pre { padding: 0.9rem; font-size: 0.8rem; }
+  /* A full screen shrunk to a phone is unreadable: show a readable part of it, at --z times the
+     width, around the focus --fx/--fy (0 = left/top edge, 1 = right/bottom edge of the overflow).
+     The captures are 2400 x 1520 (--r = 1520 / 2400); the lightbox shows the whole screen. */
+  .shot:not(.panel) .zoom { --r: 0.6333; aspect-ratio: 4 / 3; overflow: hidden; }
+  .shot:not(.panel) .zoom img {
+    width: calc(var(--z, 2.4) * 100%);
+    max-width: none;
+    margin-left: calc(var(--fx, 0) * (1 - var(--z, 2.4)) * 100%);
+    margin-top: calc(var(--fy, 0) * (0.75 - var(--z, 2.4) * var(--r)) * 100%);
+  }
 }

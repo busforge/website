@@ -40,44 +40,62 @@
           <circle cx="23" cy="22.5" r="1.7"/>
         </g>
       </svg>
-      <span class="word">BUSFORGE</span>
+      <span class="names"><span class="word">BUSFORGE</span><span class="tagline">Open commissioning tool for KNX</span></span>
     </a>
     <nav class="topnav" aria-label="Main">
       <a href="#start">Install</a>
-      <a class="opt" href="#limits">Limitations</a>
-      <a href="https://github.com/busforge/busforge">GitHub</a>
+      <a class="opt" href="#demo">Demo</a>
+      <a href="#limits">Limits</a>
+      <a class="gh" href="https://github.com/busforge/busforge"><span class="label">GitHub</span></a>
     </nav>
   </header>
 
   <main>
     <section class="wrap hero">
       <div>
+        <p class="eyebrow">Public alpha · Self-hosted · AGPL-3.0</p>
         <h1>Commission KNX from a browser.</h1>
         <p class="lead">Busforge imports your ETS project, shows the bus live and programs real KNX devices, then reads each device back to check it holds what was written. Self-hosted in one Docker container, on Linux or a Mac.</p>
         <div class="cta">
-          <a class="button primary" href="https://github.com/busforge/busforge/blob/main/docs/install.md">Install guide</a>
-          <a class="button" href="https://github.com/busforge/busforge">Source on GitHub</a>
+          <a class="button primary" href="#start">Install</a>
+          <a class="button" href="#demo">Set up the demo</a>
+          <a class="button ghost gh" href="https://github.com/busforge/busforge">Source on GitHub</a>
         </div>
-        <p class="alpha">Public alpha, for technically capable KNX users. Keep your ETS project as a backup.</p>
+        <p class="alpha">For technically capable KNX users. Keep your ETS project as a backup.</p>
       </div>
       <figure class="shot">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
-        <a href="/img/app-params.webp" class="zoom"><img src="/img/app-params.webp" width="2400" height="1520" alt="Busforge device page of an MDT universal interface, programmed and with every operation Busforge supports for the product tested: the parameters filtered for sending, each input's status object linked to a group address, and the Flash button." fetchpriority="high"></a>
+        <a href="/img/app-params.webp" class="zoom" style="--z: 2.1; --fx: 0.09; --fy: 0.3"><img src="/img/app-params.webp" width="2400" height="1520" alt="Busforge device page of an MDT universal interface, programmed and with every operation Busforge supports for the product tested: the parameters filtered for sending, each input's status object linked to a group address, and the Flash button." fetchpriority="high"></a>
+        <figcaption>Device page of a programmed bench device · click or tap to enlarge</figcaption>
       </figure>
     </section>
 
+    <section class="wrap proof" aria-labelledby="proof-h">
+      <p class="eyebrow" id="proof-h">Shown on real devices</p>
+      <p class="proof-text">Parameters programmed and read back on 18 products from ten manufacturers, all on twisted pair.</p>
+      <ul class="makers">
+        <li>ABB</li><li>Basalte</li><li>Gira</li><li>GVS</li><li>Jung</li><li>MDT</li><li>MEAN WELL</li><li>OpenKNX</li><li>Steinel</li><li>Theben</li>
+      </ul>
+      <a class="more" href="https://github.com/busforge/busforge/blob/main/docs/status.md#devices-driven-on-real-hardware">What was shown for each product →</a>
+    </section>
+
     <section class="band content" id="start" aria-labelledby="start-h">
-      <div class="wrap cols">
-        <div>
-          <h2 id="start-h">Quick start</h2>
-          <p>One container, one data volume, one master key that seals the Data Secure keys Busforge stores. Keep the key with your backups: without it a restored backup cannot open them.</p>
-          <p>Then open <code>http://127.0.0.1:3000</code>, create an empty project or import yours, and add your KNXnet/IP interface. The <a href="https://github.com/busforge/busforge/blob/main/docs/install.md">install guide</a> covers compose, product definitions, USB interfaces, update, backup and restore, and the platforms Busforge has run on.</p>
-          <p class="note">Busforge has no login. Keep it on a trusted network and never expose it to the internet. The published image is for x86_64; on arm64, build it from the source.</p>
-        </div>
-        <div>
+      <div class="wrap">
+        <h2 id="start-h">Install and try it</h2>
+        <div class="steps">
+          <div class="step">
+            <div>
+              <p class="eyebrow">1 · Run it</p>
+              <p>One container, one data volume, one master key that seals the Data Secure keys Busforge stores. Keep the key with your backups: without it a restored backup cannot open them.</p>
+              <p>Then open <code>http://127.0.0.1:3000</code>, create an empty project or import yours, and add your KNXnet/IP interface. The <a href="https://github.com/busforge/busforge/blob/main/docs/install.md">install guide</a> covers compose, product definitions, USB interfaces, update, backup and restore, and the platforms Busforge has run on.</p>
+              <p class="note">The published image is for x86_64. On arm64, a Mac with Apple silicon included, build the image first: the steps are under the command.</p>
+              <p class="note">Busforge has no login. Keep it on a trusted network and never expose it to the internet.</p>
+            </div>
+            <div class="code">
+              <div class="bar"><span>Terminal</span></div>
 <pre><code><span class="c"># once; keep this file safe</span>
 [ -f busforge-master.key ] ||
-  openssl rand -hex 32 &gt; busforge-master.key
+  (umask 077; openssl rand -hex 32 &gt; busforge-master.key)
 
 docker run -d --name busforge \
   --stop-timeout 1800 \
@@ -85,14 +103,50 @@ docker run -d --name busforge \
   -v busforge-data:/app/apps/server/data \
   -e BUSFORGE_MASTER_KEY="$(cat busforge-master.key)" \
   ghcr.io/busforge/busforge:latest</code></pre>
+              <details class="arm">
+                <summary>On arm64 (a Mac with Apple silicon): build the image</summary>
+                <p>Build it from a checkout, then run the command above with <code>busforge</code> in place of the image name.</p>
+<pre><code>git clone https://github.com/busforge/busforge.git
+cd busforge &amp;&amp; docker build -t busforge .</code></pre>
+              </details>
+            </div>
+          </div>
+          <div class="step" id="demo">
+            <div>
+              <p class="eyebrow">2 · Set up the demo</p>
+              <p>With Busforge running (<a href="#start">step 1</a>), no bus needed: the demo tool builds a small flat of four OpenKNX devices into your running instance: rooms, group addresses and every device configured and linked, nothing written to a bus. It downloads OpenKNX's release archives and checks each against a pinned hash.</p>
+              <p>It needs a checkout of the repository and <a href="https://bun.sh">Bun</a>. The <a href="https://github.com/busforge/busforge/blob/main/docs/demo.md">demo guide</a> also covers the larger demo house built from the product databases you bring.</p>
+            </div>
+            <div class="code">
+              <div class="bar"><span>Terminal</span></div>
+<pre><code>git clone https://github.com/busforge/busforge.git
+cd busforge &amp;&amp; bun install
+bun run tools/demo-project.ts http://127.0.0.1:3000</code></pre>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="band verify" aria-labelledby="verify-h">
       <div class="wrap">
-        <h2 id="verify-h">From your project to a verified device</h2>
-        <p class="intro">Bring an ETS project, or start empty and place devices from the product catalogue, and configure them in the browser. When you program, Busforge builds the device's memory image, checks the device, writes through your interface and reads it back byte for byte. A device that differs is reported, never shown as done.</p>
+        <h2 id="verify-h">Programmed, then read back</h2>
+        <p class="intro">Bring an ETS project, or start empty and place devices from the product catalogue, and configure them in the browser. When you program, Busforge builds the device's memory image, checks the device, writes through your interface and reads it back, comparing byte for byte. A device that differs is reported, never shown as done.</p>
+
+        <dl class="facts">
+          <div>
+            <dt>What a read-back proves</dt>
+            <dd>That the device holds Busforge's bytes. A field the device does not give back and a restart it does not confirm are named in the result, not counted as read back. Whether they are the bytes ETS would write is a separate check, made against ETS captures product by product and shown in the <a href="https://github.com/busforge/busforge/blob/main/docs/compatibility.md">compatibility list</a>.</dd>
+          </div>
+          <div>
+            <dt>Drift before you write</dt>
+            <dd>Read a device Busforge supports and see, parameter by parameter, where it differs from your project.</dd>
+          </div>
+          <div>
+            <dt>Small writes</dt>
+            <dd>A flash writes the parts a change touches, parameters, group addresses or both, instead of a full download where the device allows it, and backs up what it overwrites first.</dd>
+          </div>
+        </dl>
 
         <div class="diagram">
           <svg class="wide" viewBox="0 0 1000 528" role="img" aria-labelledby="dg-t">
@@ -130,6 +184,7 @@ docker run -d --name busforge \
               <text x="463" y="426" fill="#8d9399">dry run</text>
               <rect x="739" y="414" width="64" height="16" rx="2" fill="#13181d"/>
               <text x="771" y="426" fill="#8d9399">differs</text>
+              <text x="808" y="337" fill="#54c57a">equal</text>
             </g>
             <g font-family="'Archivo', sans-serif" text-anchor="middle">
               <rect x="24" y="28" width="168" height="64" rx="8" fill="rgba(141,147,153,0.10)" stroke="#717880"/>
@@ -179,8 +234,9 @@ docker run -d --name busforge \
             </g>
           </svg>
 
-          <svg class="tall" viewBox="0 0 360 1064" role="img" aria-labelledby="dg-t2">
+          <svg class="tall" viewBox="0 0 360 456" role="img" aria-labelledby="dg-t2">
             <title id="dg-t2">How Busforge works: an ETS project, or a project started empty and filled from the manufacturers' product databases, is configured in the browser. Programming builds the device's memory image, reads the device to check its mask and back up what a partial write changes, and compares. A preview stops there. Otherwise it writes over a KNXnet/IP or USB interface, a partial write only what differs, and reads the device back: equal bytes mean verified, different bytes are reported. The bus monitor shows the bus live in the browser.</title>
+            <g id="tall-art">
             <defs>
               <marker id="dt" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8d9399"/></marker>
               <marker id="dt-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f3a44a"/></marker>
@@ -233,8 +289,6 @@ docker run -d --name busforge \
               <rect x="260" y="112" width="88" height="56" rx="8" fill="#090e12" stroke="#c3c8cd"/>
               <text x="304" y="135.5" fill="#e5e8eb" font-size="14" font-weight="600">Bus</text>
               <text x="304" y="154.5" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">monitor</text>
-              <rect x="8" y="472" width="344" height="584" rx="10" fill="rgba(141,147,153,0.04)" stroke="#3a434b"/>
-              <text x="24" y="502" fill="#8d9399" font-size="13" font-weight="600" text-anchor="start">Program, step by step</text>
               <rect x="28" y="524" width="200" height="56" rx="8" fill="#090e12" stroke="#c3c8cd"/>
               <text x="128" y="547.5" fill="#e5e8eb" font-size="16" font-weight="600">Build the image</text>
               <text x="128" y="566.5" fill="#8d9399" font-size="11" font-family="'JetBrains Mono', monospace">parameters, tables</text>
@@ -258,35 +312,26 @@ docker run -d --name busforge \
               <rect x="188" y="1004" width="152" height="44" rx="8" fill="rgba(84,197,122,0.10)" stroke="#54c57a"/>
               <text x="264" y="1031" fill="#54c57a" font-size="15" font-weight="700">Verified</text>
             </g>
+            </g>
           </svg>
+          <details class="tall-steps">
+            <summary>Programming, step by step</summary>
+            <svg viewBox="0 512 360 544" aria-hidden="true"><use href="#tall-art"/></svg>
+          </details>
         </div>
 
-        <dl class="facts">
-          <div>
-            <dt>What a read-back proves</dt>
-            <dd>That the device holds Busforge's bytes. Whether they are the bytes ETS would write is a separate check, made against ETS captures product by product and shown in the <a href="https://github.com/busforge/busforge/blob/main/docs/compatibility.md">compatibility list</a>.</dd>
-          </div>
-          <div>
-            <dt>Drift before you write</dt>
-            <dd>Read any device and see, parameter by parameter, where it differs from your project.</dd>
-          </div>
-          <div>
-            <dt>Small writes</dt>
-            <dd>A flash writes only the regions that differ, and backs them up first.</dd>
-          </div>
-        </dl>
       </div>
     </section>
 
     <section class="band" aria-labelledby="tour-h">
       <div class="wrap">
         <h2 id="tour-h">The application</h2>
-        <p class="intro">Screens from the demo project: an invented house with seventeen devices of ten manufacturers, one of them programmed on a test bench.</p>
+        <p class="intro">Screens from the larger demo, an invented house with seventeen devices of ten manufacturers built from their product databases. One of them, an MDT universal interface, is a real device on a test bench, programmed and tested there. Click or tap a screen to see it at full size.</p>
         <div class="tour">
           <div class="row">
             <figure class="shot">
               <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
-              <a href="/img/app-devices.webp" class="zoom"><img src="/img/app-devices.webp" width="2400" height="1520" loading="lazy" alt="Device overview of the demo house: floors and rooms on the left, each device under its room with its individual address, manufacturer and programming state."></a>
+              <a href="/img/app-devices.webp" class="zoom" style="--fx: 0.42; --fy: 0.6"><img src="/img/app-devices.webp" width="2400" height="1520" loading="lazy" alt="Device overview of the demo house: floors and rooms on the left, each device under its room with its individual address, manufacturer and programming state."></a>
             </figure>
             <div>
               <h3>Your building, room by room</h3>
@@ -296,7 +341,7 @@ docker run -d --name busforge \
           <div class="row flip">
             <figure class="shot">
               <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
-              <a href="/img/app-ga.webp" class="zoom"><img src="/img/app-ga.webp" width="2400" height="1520" loading="lazy" alt="Group address overview: main and middle groups for central functions, lighting, blinds, heating and presence, each address with its name and datapoint type."></a>
+              <a href="/img/app-ga.webp" class="zoom" style="--z: 1.65; --fx: 0.67; --fy: 0.85"><img src="/img/app-ga.webp" width="2400" height="1520" loading="lazy" alt="Group address overview: main and middle groups for central functions, lighting, blinds, heating and presence, each address with its name and datapoint type."></a>
             </figure>
             <div>
               <h3>Group addresses, with their types</h3>
@@ -304,19 +349,17 @@ docker run -d --name busforge \
             </div>
           </div>
           <div class="row">
-            <figure class="shot narrow">
-              <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
-              <a href="/img/app-flash.webp" class="zoom"><img src="/img/app-flash.webp" width="1320" height="760" loading="lazy" alt="Program dialog for the MDT universal interface after one parameter and one group address were changed: checked against the device, 2 of 168 configuration bytes and 3 of 115 group address bytes will change."></a>
+            <figure class="shot panel">
+              <a href="/img/app-flash.webp" class="zoom"><img src="/img/app-flash.webp" width="1024" height="628" loading="lazy" alt="Program dialog for the MDT universal interface after one parameter and one group address were changed: checked against the device, 2 of 168 configuration bytes and 3 of 115 group address bytes will change."></a>
             </figure>
             <div>
               <h3>A preview before every write</h3>
-              <p>The program dialog first checks against the real device and says what it would write. Here one parameter and one group address were changed: only the regions that differ are written, each backed up first and read back after.</p>
+              <p>The program dialog first checks against the real device and says what it would write. Here one parameter and one group address were changed: 2 of 168 configuration bytes and 3 of 115 group-address bytes, each region backed up first and read back after.</p>
             </div>
           </div>
           <div class="row flip">
-            <figure class="shot">
-              <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
-              <a href="/img/app-compat.webp" class="zoom"><img src="/img/app-compat.webp" width="1424" height="1028" loading="lazy" alt="Compatibility popover of the MDT universal interface: every operation, from reading parameters to the structural flash, tested on hardware, and the explanation of what tested means."></a>
+            <figure class="shot panel tall">
+              <a href="/img/app-compat.webp" class="zoom"><img src="/img/app-compat.webp" width="678" height="990" loading="lazy" alt="Compatibility popover of the MDT universal interface: every operation, from reading parameters to the structural flash, tested on hardware, and the explanation of what tested means."></a>
             </figure>
             <div>
               <h3>What has been shown for this product</h3>
@@ -324,9 +367,8 @@ docker run -d --name busforge \
             </div>
           </div>
           <div class="row">
-            <figure class="shot">
-              <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">127.0.0.1:3000</span></div>
-              <a href="/img/app-diag.webp" class="zoom"><img src="/img/app-diag.webp" width="1440" height="1088" loading="lazy" alt="The dialog to create a diagnostic package over the device page: what is read, the limits, the effect on the bus, and that the result stays on this computer."></a>
+            <figure class="shot panel">
+              <a href="/img/app-diag.webp" class="zoom"><img src="/img/app-diag.webp" width="1076" height="931" loading="lazy" alt="The dialog to create a diagnostic package: what is read, the limits, the effect on the bus, and that the result stays on this computer."></a>
             </figure>
             <div>
               <h3>A diagnostic package for the rest</h3>
@@ -337,19 +379,17 @@ docker run -d --name busforge \
       </div>
     </section>
 
-    <section class="band content" aria-labelledby="does-h">
-      <div class="wrap cols">
-        <div>
-          <h2 id="does-h">What it does</h2>
-          <p>An open alternative to ETS for your own installation, without Windows. Programming writes bytes into a device in a real building, so Busforge refuses what it cannot do with a coded error rather than guessing.</p>
-        </div>
+    <section class="band" aria-labelledby="does-h">
+      <div class="wrap">
+        <h2 id="does-h">What it does</h2>
+        <p class="intro">An open alternative to ETS, without Windows. Programming writes bytes into a device in a real building, so Busforge refuses what it cannot do with a coded error rather than guessing.</p>
         <dl class="features">
-          <div><dt>Import</dt><dd>ETS 5 and 6 projects, password-protected ones too, and manufacturer product databases.</dd></div>
-          <div><dt>Watch</dt><dd>A live bus monitor with decoded values and group-address names, Data Secure telegrams included.</dd></div>
-          <div><dt>Configure</dt><dd>The device's own parameter pages: conditions, channels, modules, translations.</dd></div>
-          <div><dt>Program</dt><dd>Parameters, group addresses and full downloads, over KNXnet/IP or USB.</dd></div>
-          <div><dt>Commission</dt><dd>Assign an individual address and bring up a factory-fresh device.</dd></div>
-          <div><dt>Keep</dt><dd>Restore points, drift detection and an encrypted project export.</dd></div>
+          <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>Import</dt><dd>ETS 5 and 6 projects, password-protected ones too, and manufacturer product databases.</dd></div>
+          <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Watch</dt><dd>A live bus monitor with decoded values and group-address names, Data Secure telegrams included.</dd></div>
+          <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/></svg>Configure</dt><dd>The device's own parameter pages: conditions, channels, modules, translations.</dd></div>
+          <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></svg>Program</dt><dd>Parameters, group addresses and full downloads, over KNXnet/IP or USB.</dd></div>
+          <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r="1"/></svg>Commission</dt><dd>Assign an individual address and bring up a factory-fresh device.</dd></div>
+          <div><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>Keep</dt><dd>Restore points, drift detection and a project export, encrypted when you set a password.</dd></div>
         </dl>
       </div>
     </section>
@@ -373,12 +413,29 @@ docker run -d --name busforge \
       </div>
     </section>
 
-    <section class="band" aria-label="Limits, reporting and license">
+    <section class="band" id="limits" aria-labelledby="limits-h">
+      <div class="wrap">
+        <h2 id="limits-h">Limits of the alpha</h2>
+        <p class="intro">Most KNX products have never been in front of Busforge. One without its own evidence is written only after you confirm, once per project, that it is untested. What Busforge does not support, or has never shown on a device:</p>
+        <dl class="limits">
+          <div><dt>Firmware download</dt><dd><span class="mark">not implemented</span>No separate application code load (LSM 5).</dd></div>
+          <div><dt>System 2 and System 300</dt><dd><span class="mark">refused</span>Recognised by their mask and refused.</dd></div>
+          <div><dt>System 1</dt><dd><span class="mark">read only</span>With one exception: the download of a Data Secure KNXnet/IP interface on mask <span class="nw">MV-0012</span>.</dd></div>
+          <div><dt>Property-based loading</dt><dd><span class="mark">not implemented</span>Interface-object devices with no memory image are refused.</dd></div>
+          <div><dt>Powerline, RF and IP media</dt><dd><span class="mark">never on the wire</span>All hardware work so far was on twisted pair.</dd></div>
+          <div><dt>KNX IP Secure</dt><dd><span class="mark">not supported</span>Plain KNXnet/IP tunnelling only.</dd></div>
+          <div><dt>Vendor plugins (DCA)</dt><dd><span class="mark">one, read only</span>A replacement view for one DALI gateway; nothing is written back.</dd></div>
+          <div><dt>Login</dt><dd><span class="mark">none</span>Anyone who reaches the port can program devices.</dd></div>
+        </dl>
+        <p class="more-limits">The known issues and what is shown on few devices are on the <a href="https://github.com/busforge/busforge/blob/main/docs/limitations.md">limitations page</a>.</p>
+      </div>
+    </section>
+
+    <section class="band" aria-labelledby="contribute-h">
+      <div class="wrap">
+        <h2 id="contribute-h">Report and contribute</h2>
+      </div>
       <div class="wrap closing">
-        <div id="limits">
-          <h3>Limits of the alpha</h3>
-          <p>No firmware download, no System 2 or System 300 devices, writes to System 1 devices in one case only, and powerline, RF and IP media never tried on the wire. All hardware work so far was on twisted pair. The full list and the known issues are on the <a href="https://github.com/busforge/busforge/blob/main/docs/limitations.md">limitations page</a>.</p>
-        </div>
         <div>
           <h3>Report a problem</h3>
           <p>Found a fault, or a device that works for you? Open an <a href="https://github.com/busforge/busforge/issues">issue on GitHub</a>, or let the app prefill one from a device's menu. The <a href="https://github.com/busforge/busforge/blob/main/docs/reporting.md">reporting guide</a> shows what the link carries and what stays out of a public issue.</p>
@@ -386,6 +443,18 @@ docker run -d --name busforge \
         <div>
           <h3>License</h3>
           <p>Free software under the <a href="https://github.com/busforge/busforge/blob/main/LICENSE">GNU AGPL-3.0-or-later</a>: free for any use, including commissioning installations for paying clients. Building Busforge into a closed product or service without the AGPL's obligations needs a commercial license; see <a href="https://fohlmeister.com">fohlmeister.com</a>. Contributions are welcome, see <a href="https://github.com/busforge/busforge/blob/main/CONTRIBUTING.md">contributing</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band final" aria-labelledby="final-h">
+      <div class="wrap">
+        <h2 id="final-h">Try it next to your ETS project</h2>
+        <p class="intro">Start with the demo, then read one of your own devices back and compare it with your project before you write anything.</p>
+        <div class="cta">
+          <a class="button primary" href="#start">Install</a>
+          <a class="button" href="#demo">Set up the demo</a>
+          <a class="button ghost gh" href="https://github.com/busforge/busforge">Source on GitHub</a>
         </div>
       </div>
     </section>
@@ -397,15 +466,48 @@ docker run -d --name busforge \
   </footer>
 
   <dialog class="lightbox" aria-label="Screenshot">
-    <button type="button" class="close" aria-label="Close">
+    <button type="button" class="button size" hidden>Actual size</button>
+    <button type="button" class="button icon close" aria-label="Close">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
     <img alt="">
+    <p class="hint" hidden>Swipe to look around · tap to fit</p>
   </dialog>
   <script>
     // Opens a screenshot in place; without script the link opens the image itself.
     const box = document.querySelector(".lightbox");
     const big = box.querySelector("img");
+    // The captures are taken at twice the app's pixel size. On a narrow screen the lightbox opens
+    // fitted, and a tap shows the capture at the app's own size, centred on the tapped spot.
+    const narrow = matchMedia("(max-width: 900px)");
+    const hint = box.querySelector(".hint");
+    const size = box.querySelector(".size");
+    let zoomable = false;
+    const setActual = (on, fx = 0.5, fy = 0.5) => {
+      box.classList.toggle("actual", on);
+      big.style.width = on ? big.naturalWidth / 2 + "px" : "";
+      hint.hidden = !on;
+      size.textContent = on ? "Fit screen" : "Actual size";
+      if (on) box.scrollTo(big.offsetLeft + fx * big.offsetWidth - box.clientWidth / 2, big.offsetTop + fy * big.offsetHeight - box.clientHeight / 2);
+    };
+    // Worth enlarging where the fitted image is clearly smaller than the app's own size; checked
+    // again when the window turns, since the fit depends on both width and height.
+    const checkZoomable = () => {
+      if (!box.open || !big.naturalWidth || box.classList.contains("actual")) return;
+      zoomable = narrow.matches && big.naturalWidth / 2 > big.getBoundingClientRect().width * 1.2;
+      box.classList.toggle("zoomable", zoomable);
+      size.hidden = !zoomable;
+    };
+    big.addEventListener("load", () => {
+      setActual(false);
+      checkZoomable();
+    });
+    addEventListener("resize", checkZoomable);
+    big.addEventListener("click", (e) => {
+      if (!zoomable) return;
+      const r = big.getBoundingClientRect();
+      setActual(!box.classList.contains("actual"), (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+    });
     document.addEventListener("click", (e) => {
       const link = e.target.closest("a.zoom");
       if (!link || !box.showModal || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -417,6 +519,7 @@ docker run -d --name busforge \
       document.documentElement.classList.add("locked");
     });
     box.querySelector(".close").addEventListener("click", () => box.close());
+    size.addEventListener("click", () => setActual(!box.classList.contains("actual")));
     // The image fills the dialog's centre; a press and release outside it land on the dialog, i.e. the backdrop.
     let pressedOutside = false;
     box.addEventListener("pointerdown", (e) => { pressedOutside = e.target === box; });
@@ -424,7 +527,33 @@ docker run -d --name busforge \
     box.addEventListener("close", () => {
       document.documentElement.classList.remove("locked");
       big.removeAttribute("src");
+      big.style.width = "";
+      box.classList.remove("actual", "zoomable");
+      hint.hidden = true;
+      size.hidden = true;
     });
+
+    // A copy button in each terminal card's bar for its main command, where the browser offers the clipboard.
+    if (navigator.clipboard?.writeText) {
+      for (const pre of document.querySelectorAll(".code > pre")) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "button sm copy";
+        btn.textContent = "Copy";
+        let reset;
+        btn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(pre.innerText.trim() + "\n");
+            btn.textContent = "Copied";
+          } catch {
+            btn.textContent = "Copy failed";
+          }
+          clearTimeout(reset);
+          reset = setTimeout(() => (btn.textContent = "Copy"), 1600);
+        });
+        pre.parentElement.append(btn);
+      }
+    }
   </script>
 </body>
 </html>
